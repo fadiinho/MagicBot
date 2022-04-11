@@ -1,0 +1,86 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+import {
+  WAMessage,
+  GroupMetadata,
+  MessageType,
+  WAMessageContent,
+  getContentType,
+  isJidGroup
+} from '@adiwajshing/baileys';
+import { isMedia } from '../utils';
+import type Client from '../Client';
+
+const config = {
+  prefix: process.env.PREFIX ? process.env.PREFIX : '!'
+};
+
+export declare type ParsedData = {
+  messageInfo: WAMessage;
+  message: WAMessageContent;
+  text: string;
+  splitedText: string[];
+  mentions: string[];
+  messageLength: number;
+  command: string;
+  id: string;
+  from: string;
+  fromMe: boolean;
+  participant: string;
+  messageType: string;
+  quotedMessage: WAMessageContent | null;
+  hasQuotedMessage: boolean;
+  isGroup: boolean;
+  hasMedia: boolean;
+  isCommand: boolean;
+  isViewOnce: boolean;
+  getMedia(): MessageType | null;
+  getGroupMetadata(): Promise<GroupMetadata | null>;
+};
+
+export default async function parse(data: WAMessage, client: Client) {
+  const message = data.message;
+
+  const type = getContentType(message);
+
+  const mentions = type === 'extendedTextMessage' ? message.extendedTextMessage.contextInfo.mentionedJid : null;
+
+  const text = type === 'extendedTextMessage' ? message.extendedTextMessage.text : message.conversation;
+  const splitedText = text.split(' ');
+  const command = splitedText[0];
+
+  const parsedData: ParsedData = {
+    messageInfo: data,
+    message: data.message,
+    text,
+    splitedText,
+    mentions,
+    messageLength: text.length,
+    command,
+    id: data.key.id,
+    from: data.key.remoteJid,
+    fromMe: data.key.fromMe,
+    participant: data.key.participant,
+    messageType: type,
+    quotedMessage: type === 'extendedTextMessage' ? message.extendedTextMessage.contextInfo.quotedMessage : null,
+    hasQuotedMessage:
+      type === 'extendedTextMessage' && message.extendedTextMessage.contextInfo.quotedMessage ? true : false,
+    isGroup: isJidGroup(data.key.remoteJid),
+    hasMedia: isMedia(type),
+    isCommand: command.startsWith(config.prefix),
+    isViewOnce: type === 'viewOnceMessage',
+    getMedia: function () {
+      if (!this.hasMedia) return null;
+
+      return this.data.message[this.messageType];
+    },
+    getGroupMetadata: async function () {
+      if (!this.isGroup) return;
+
+      return await client.socket.groupMetadata(this.from);
+    }
+  };
+
+  return parsedData;
+}

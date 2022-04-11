@@ -1,0 +1,4 @@
+lib/
+sessions/**/*
+node_modules
+.env
