@@ -1,4 +1,5 @@
 import { Boom } from '@hapi/boom';
+import logger from './utils/Logger';
 import makeWASocket, {
   useSingleFileAuthState,
   makeInMemoryStore,
@@ -38,6 +39,7 @@ export default class Client {
   init() {
     this.socket = makeWASocket({
       auth: this.stateObject.state,
+      logger: logger,
       printQRInTerminal: true
     });
 
