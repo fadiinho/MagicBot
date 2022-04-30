@@ -12,6 +12,7 @@
     "@adiwajshing/baileys": "^4.1.0",
     "@adiwajshing/keyed-db": "^0.2.4",
     "dotenv": "^16.0.0",
+    "emoji-regex": "^10.1.0",
     "pino": "^7.10.0",
     "pino-pretty": "^7.6.1",
     "qrcode-terminal": "^0.12.0"
