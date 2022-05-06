@@ -29,7 +29,6 @@ export declare type ParsedData = {
   fromMe: boolean;
   participant: string;
   messageType: string;
-  quotedMessage: WAMessageContent | null;
   hasQuotedMessage: boolean;
   isGroup: boolean;
   hasMedia: boolean;
@@ -37,6 +36,7 @@ export declare type ParsedData = {
   isViewOnce: boolean;
   getMedia(): MessageType | null;
   getGroupMetadata(): Promise<GroupMetadata | null>;
+  getQuotedMessage(): Promise<ParsedData | null>;
 };
 
 export default async function parse(data: WAMessage, client: Client) {
@@ -63,22 +63,34 @@ export default async function parse(data: WAMessage, client: Client) {
     fromMe: data.key.fromMe,
     participant: data.key.participant,
     messageType: type,
-    quotedMessage: type === 'extendedTextMessage' ? message.extendedTextMessage.contextInfo.quotedMessage : null,
     hasQuotedMessage:
       type === 'extendedTextMessage' && message.extendedTextMessage.contextInfo.quotedMessage ? true : false,
     isGroup: isJidGroup(data.key.remoteJid),
     hasMedia: isMedia(type),
     isCommand: command.startsWith(config.prefix),
     isViewOnce: type === 'viewOnceMessage',
-    getMedia: function () {
+    getMedia: function() {
       if (!this.hasMedia) return null;
 
       return this.data.message[this.messageType];
     },
-    getGroupMetadata: async function () {
+    getGroupMetadata: async function() {
       if (!this.isGroup) return;
 
       return await client.socket.groupMetadata(this.from);
+    },
+    getQuotedMessage: async function(): Promise<ParsedData | null> {
+      const quotedId = this.hasMedia ? this.message[this.messageType].contextInfo?.stanzaId : this.message?.extendedTextMessage?.contextInfo?.stanzaId
+
+      if (!quotedId) return null;
+
+      // @ts-ignore
+      const _q = await client.store.loadMessage(this.from, quotedId, client.socket).catch((err) => {
+        throw new Error(err.message);
+      });
+      const quotedMessage = _q ? await parse(_q, client) : null;
+
+      return quotedMessage;
     }
   };
 
