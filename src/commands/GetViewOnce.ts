@@ -1,4 +1,4 @@
-import { downloadContentFromMessage, getContentType } from '@adiwajshing/baileys';
+import { downloadContentFromMessage, getContentType, proto, AnyMessageContent } from '@adiwajshing/baileys';
 import Command from './Command';
 import type Client from '../Client';
 import { ParsedData } from '../CommandHandler/Parser';
@@ -9,32 +9,52 @@ export default class GetViewOnce implements Command {
   description = `*!getvo*\nComando para pegar a mídia da mensagem única`;
 
   async execute(data: ParsedData, client: Client) {
-    const { hasQuotedMessage, quotedMessage, from, messageInfo } = data;
+    const { hasQuotedMessage, from, messageInfo } = data;
 
-    if (!hasQuotedMessage && !quotedMessage) return;
-    if (!quotedMessage.viewOnceMessage) return;
+    if (!hasQuotedMessage) return;
+    const quotedMessage = await data.getQuotedMessage();
 
-    const mediaType = getContentType(quotedMessage.viewOnceMessage.message);
+    if (!quotedMessage.isViewOnce) return;
 
-    const viewOnceMessage =
-      quotedMessage.viewOnceMessage.message.imageMessage || quotedMessage.viewOnceMessage.message.videoMessage;
+    const viewOnceMessage = quotedMessage.message.viewOnceMessage.message;
+    const mediaType = getContentType(viewOnceMessage);
+    let media: proto.IImageMessage | proto.IVideoMessage;
 
-    const stream = await downloadContentFromMessage(viewOnceMessage, mediaType === 'imageMessage' ? 'image' : 'video');
+    if (mediaType === 'imageMessage') {
+      media = viewOnceMessage.imageMessage;
+    } else if (mediaType === 'videoMessage') {
+      media = viewOnceMessage.videoMessage;
+    } else {
+      return;
+    }
 
+    const stream = await downloadContentFromMessage(media, mediaType === 'imageMessage' ? 'image' : 'video');
     let buffer = Buffer.from([]);
 
     for await (const chunk of stream) {
       buffer = Buffer.concat([buffer, chunk]);
     }
 
-    client.socket.sendMessage(
-      from,
-      {
-        image: buffer
-      },
-      {
-        quoted: messageInfo
-      }
-    );
+    if (mediaType === 'imageMessage') {
+      client.socket.sendMessage(
+        from,
+        {
+          image: buffer
+        },
+        {
+          quoted: messageInfo
+        }
+      );
+    } else {
+      client.socket.sendMessage(
+        from,
+        {
+          video: buffer
+        },
+        {
+          quoted: messageInfo
+        }
+      );
+    }
   }
 }
