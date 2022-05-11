@@ -42,6 +42,8 @@ export declare type ParsedData = {
 export default async function parse(data: WAMessage, client: Client) {
   const message = data.message;
 
+  if (!message) return null;
+
   const type = getContentType(message);
 
   const mentions = type === 'extendedTextMessage' ? message.extendedTextMessage.contextInfo.mentionedJid : null;
@@ -69,18 +71,20 @@ export default async function parse(data: WAMessage, client: Client) {
     hasMedia: isMedia(type),
     isCommand: command.startsWith(config.prefix),
     isViewOnce: type === 'viewOnceMessage',
-    getMedia: function() {
+    getMedia: function () {
       if (!this.hasMedia) return null;
 
       return this.data.message[this.messageType];
     },
-    getGroupMetadata: async function() {
+    getGroupMetadata: async function () {
       if (!this.isGroup) return;
 
       return await client.socket.groupMetadata(this.from);
     },
-    getQuotedMessage: async function(): Promise<ParsedData | null> {
-      const quotedId = this.hasMedia ? this.message[this.messageType].contextInfo?.stanzaId : this.message?.extendedTextMessage?.contextInfo?.stanzaId
+    getQuotedMessage: async function (): Promise<ParsedData | null> {
+      const quotedId = this.hasMedia
+        ? this.message[this.messageType].contextInfo?.stanzaId
+        : this.message?.extendedTextMessage?.contextInfo?.stanzaId;
 
       if (!quotedId) return null;
 
