@@ -2,7 +2,7 @@ import { WAMessage } from '@adiwajshing/baileys';
 import type Client from '../Client';
 import parse from './Parser';
 import commands from '../commands';
-import type Command from '../commands/Command';
+import { Command } from '../Types';
 
 declare type Options = {
   commandsDir: string;

@@ -1,7 +1,6 @@
-import { downloadContentFromMessage, getContentType, proto, AnyMessageContent } from '@adiwajshing/baileys';
-import Command from './Command';
+import { downloadContentFromMessage, getContentType, proto } from '@adiwajshing/baileys';
 import type Client from '../Client';
-import { ParsedData } from '../CommandHandler/Parser';
+import { ParsedData, Command } from '../Types';
 
 export default class GetViewOnce implements Command {
   name = 'GetViewOnce';

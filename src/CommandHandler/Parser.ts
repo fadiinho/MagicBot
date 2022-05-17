@@ -1,42 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import {
-  WAMessage,
-  GroupMetadata,
-  MessageType,
-  WAMessageContent,
-  getContentType,
-  isJidGroup
-} from '@adiwajshing/baileys';
+import { WAMessage, getContentType, isJidGroup } from '@adiwajshing/baileys';
 import { isMedia } from '../utils';
 import type Client from '../Client';
+import { ParsedData } from '../Types';
 
 const config = {
   prefix: process.env.PREFIX ? process.env.PREFIX : '!'
-};
-
-export declare type ParsedData = {
-  messageInfo: WAMessage;
-  message: WAMessageContent;
-  text: string;
-  splitedText: string[];
-  mentions: string[];
-  messageLength: number;
-  command: string;
-  id: string;
-  from: string;
-  fromMe: boolean;
-  participant: string;
-  messageType: string;
-  hasQuotedMessage: boolean;
-  isGroup: boolean;
-  hasMedia: boolean;
-  isCommand: boolean;
-  isViewOnce: boolean;
-  getMedia(): MessageType | null;
-  getGroupMetadata(): Promise<GroupMetadata | null>;
-  getQuotedMessage(): Promise<ParsedData | null>;
 };
 
 export default async function parse(data: WAMessage, client: Client) {

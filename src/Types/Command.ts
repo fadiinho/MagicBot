@@ -1,7 +1,7 @@
-import { ParsedData } from '../CommandHandler/Parser';
+import { ParsedData } from './ParsedData';
 import type Client from '../Client';
 
-export default interface Command {
+export interface Command {
   name: string;
   aliases: string[];
   adminOnly?: boolean;
