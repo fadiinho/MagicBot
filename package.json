@@ -4,9 +4,9 @@
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "yarn ts-node-dev --respawn --transpile-only --rs ./src/index.ts",
+    "dev": "NODE_ENV=development yarn ts-node-dev --respawn --transpile-only --rs ./src/index.ts",
     "build": "rm -rf ./lib/ && yarn tsc --build",
-    "start": "node lib/index.js"
+    "start": "NODE_ENV=production node lib/index.js"
   },
   "dependencies": {
     "@adiwajshing/baileys": "^4.1.0",
