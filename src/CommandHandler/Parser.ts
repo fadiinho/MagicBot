@@ -66,6 +66,10 @@ export default async function parse(data: WAMessage, client: Client) {
       const quotedMessage = _q ? await parse(_q, client) : null;
 
       return quotedMessage;
+    },
+    reply: async function (content) {
+      const response = client.socket.sendMessage(this.from, content, { quoted: this.messageInfo });
+      return response;
     }
   };
 

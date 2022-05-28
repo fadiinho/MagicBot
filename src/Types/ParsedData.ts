@@ -1,4 +1,11 @@
-import { WAMessage, WAMessageContent, MessageType, GroupMetadata } from '@adiwajshing/baileys';
+import {
+  WAMessage,
+  WAMessageContent,
+  MessageType,
+  GroupMetadata,
+  proto,
+  AnyMessageContent
+} from '@adiwajshing/baileys';
 
 export declare type ParsedData = {
   messageInfo: WAMessage;
@@ -21,4 +28,5 @@ export declare type ParsedData = {
   getMedia(): MessageType | null;
   getGroupMetadata(): Promise<GroupMetadata | null>;
   getQuotedMessage(): Promise<ParsedData | null>;
+  reply(content: AnyMessageContent): Promise<proto.WebMessageInfo>;
 };
