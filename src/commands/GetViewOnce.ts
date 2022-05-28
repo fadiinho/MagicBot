@@ -7,6 +7,12 @@ export default class GetViewOnce implements Command {
   aliases = ['!getvo', '!getviewonce'];
   description = `*!getvo*\nComando para pegar a mídia da mensagem única`;
 
+  static info = {
+    name: 'GetViewOnce',
+    aliases: ['!getvo', '!getviewonce'],
+    description: `*!getvo*\nComando para pegar a mídia da mensagem única`
+  };
+
   async execute(data: ParsedData, client: Client) {
     const { hasQuotedMessage, from, messageInfo } = data;
 

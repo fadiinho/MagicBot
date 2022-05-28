@@ -6,6 +6,12 @@ export default class Reply implements Command {
   aliases = ['!reply'];
   description = 'Command to reply a message.';
 
+  static info = {
+    name: 'Reply',
+    aliases: ['!reply'],
+    description: 'Command to reply a message.'
+  };
+
   async execute(data: ParsedData, _: Client): Promise<void> {
     const { splitedText } = data;
 

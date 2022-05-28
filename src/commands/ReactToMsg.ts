@@ -8,6 +8,12 @@ export default class ReactToMsg implements Command {
   aliases = ['!reagir', '!react', '!rct'];
   description = '*!react <emoji>*\nMarque uma mensagem para reagir a ela.';
 
+  static info = {
+    name: 'ReactToMsg',
+    aliases: ['!reagir', '!react', '!rct'],
+    description: '*!react <emoji>*\nMarque uma mensagem para reagir a ela.'
+  };
+
   async execute(data: ParsedData, client: Client) {
     const { hasQuotedMessage, message, from, splitedText } = data;
 

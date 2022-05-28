@@ -6,6 +6,12 @@ export default class Ping implements Command {
   aliases = ['!ping'];
   description = 'Ping command';
 
+  static info = {
+    name: 'Ping',
+    aliases: ['!ping'],
+    description: 'Ping command'
+  };
+
   execute(data: ParsedData, client: Client): void {
     const { from, messageInfo } = data;
 
