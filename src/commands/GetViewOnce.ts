@@ -41,25 +41,9 @@ export default class GetViewOnce implements Command {
     }
 
     if (mediaType === 'imageMessage') {
-      client.socket.sendMessage(
-        from,
-        {
-          image: buffer
-        },
-        {
-          quoted: messageInfo
-        }
-      );
+      data.reply({ image: buffer });
     } else {
-      client.socket.sendMessage(
-        from,
-        {
-          video: buffer
-        },
-        {
-          quoted: messageInfo
-        }
-      );
+      data.reply({ video: buffer });
     }
   }
 }
