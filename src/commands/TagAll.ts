@@ -6,11 +6,15 @@ export default class TagAll implements Command {
   name = 'TagAll';
   aliases = ['!tagall', '!marcartodos'];
   description = '*!tagall*\nMarque todos no grupo.';
+  adminOnly = true;
+  groupOnly = true;
 
   static info = {
     name: 'TagAll',
     aliases: ['!tagall', '!marcartodos'],
-    description: '*!tagall*\nMarque todos no grupo.'
+    description: '*!tagall*\nMarque todos no grupo.',
+    adminOnly: true,
+    groupOnly: true
   };
 
   async execute(data: ParsedData, client: Client) {
