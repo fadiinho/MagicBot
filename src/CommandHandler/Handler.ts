@@ -3,6 +3,7 @@ import type Client from '../Client';
 import parse from './Parser';
 import commands from '../commands';
 import { Command } from '../Types';
+import { inhibit } from './Inhibitor';
 
 declare type Options = {
   commandsDir: string;
@@ -37,10 +38,11 @@ class Handler {
     const parsedData = await parse(data, client);
 
     if (!parsedData.isCommand) return;
-
     const command = this.get(parsedData.command);
 
-    if (!command) return;
+    const result = await inhibit(parsedData, client, command);
+
+    if (!result || !command) return;
 
     command.execute(parsedData, client);
   }

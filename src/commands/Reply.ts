@@ -4,12 +4,14 @@ import { Command, ParsedData } from '../Types';
 export default class Reply implements Command {
   name = 'Reply';
   aliases = ['!reply'];
-  description = 'Command to reply a message.';
+  description = '';
+  ownerOnly = true;
 
   static info = {
     name: 'Reply',
     aliases: ['!reply'],
-    description: 'Command to reply a message.'
+    description: '',
+    ownerOnly: true
   };
 
   async execute(data: ParsedData, _: Client): Promise<void> {

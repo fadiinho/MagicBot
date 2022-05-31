@@ -6,12 +6,14 @@ import isEmoji from '../utils/isEmoji';
 export default class ReactToMsg implements Command {
   name = 'ReactToMsg';
   aliases = ['!reagir', '!react', '!rct'];
-  description = '*!react <emoji>*\nMarque uma mensagem para reagir a ela.';
+  description = '';
+  ownerOnly = true;
 
   static info = {
     name: 'ReactToMsg',
     aliases: ['!reagir', '!react', '!rct'],
-    description: '*!react <emoji>*\nMarque uma mensagem para reagir a ela.'
+    description: '',
+    ownerOnly: true
   };
 
   async execute(data: ParsedData, client: Client) {
