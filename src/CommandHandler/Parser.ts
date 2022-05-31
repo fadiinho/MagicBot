@@ -45,7 +45,7 @@ export default async function parse(data: WAMessage, client: Client) {
     getMedia: function () {
       if (!this.hasMedia) return null;
 
-      return this.data.message[this.messageType];
+      return this.message[this.messageType];
     },
     getGroupMetadata: async function () {
       if (!this.isGroup) return;
