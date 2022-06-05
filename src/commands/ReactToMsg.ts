@@ -1,4 +1,4 @@
-import { getContentType } from '@adiwajshing/baileys';
+import { getContentType, jidNormalizedUser } from '@adiwajshing/baileys';
 import type Client from '../Client';
 import { ParsedData, Command } from '../Types';
 import isEmoji from '../utils/isEmoji';
@@ -17,7 +17,7 @@ export default class ReactToMsg implements Command {
   };
 
   async execute(data: ParsedData, client: Client) {
-    const { hasQuotedMessage, message, from, splitedText } = data;
+    const { hasQuotedMessage, message, splitedText } = data;
 
     if (!hasQuotedMessage) return;
     if (splitedText.length <= 1) return;
@@ -37,13 +37,6 @@ export default class ReactToMsg implements Command {
 
     if (!quotedMessage) return;
 
-    const reactionMessage = {
-      react: {
-        text: emoji,
-        key: quotedMessage.key
-      }
-    };
-
-    await client.socket.sendMessage(from, reactionMessage);
+    await client.reactToMsg(quotedMessage.key, emoji);
   }
 }
