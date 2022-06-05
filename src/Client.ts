@@ -6,8 +6,12 @@ import makeWASocket, {
   DisconnectReason,
   AuthenticationState,
   WAMessage,
-  Chat
+  Chat,
+  WAMessageKey,
+  jidNormalizedUser
 } from '@adiwajshing/baileys';
+
+import { isEmoji } from './utils';
 
 export default class Client {
   SESSION_PATH: string;
@@ -80,5 +84,23 @@ export default class Client {
         callback(_chat);
       }
     });
+  }
+
+  async reactToMsg(key: WAMessageKey, emoji: string) {
+    if (!isEmoji(emoji)) {
+      throw new Error(`${emoji} is not a valid emoji`);
+    }
+
+    const reaction = {
+      react: {
+        text: emoji,
+        key: {
+          ...key,
+          participant: key.participant ? jidNormalizedUser(key.participant) : null
+        }
+      }
+    };
+
+    return await this.socket?.sendMessage(key.remoteJid, reaction);
   }
 }
