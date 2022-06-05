@@ -14,14 +14,15 @@ export default class AnimeSearch implements Command {
     description: '*!sauce*\nComando para encontrar a fonte de uma imagem (anime).'
   };
 
-  async execute(data: ParsedData, _client: Client): Promise<void> {
-    const { hasQuotedMessage } = data;
+  async execute(data: ParsedData, client: Client): Promise<void> {
+    const { hasQuotedMessage, messageInfo } = data;
 
     const api = new AnimeApi({
       saucenaoKey: process.env.SAUCENAO_API_KEY
     });
 
     if (!hasQuotedMessage) {
+      await client.reactToMsg(messageInfo.key, '❌');
       data.reply({ text: 'Você precisa marcar uma imagem.' });
       return;
     }
@@ -29,6 +30,7 @@ export default class AnimeSearch implements Command {
     const type = quoted.messageType;
 
     if (!quoted.hasMedia || type !== 'imageMessage') {
+      await client.reactToMsg(messageInfo.key, '❌');
       data.reply({ text: 'A mensagem marcada precisa conter uma imagem.' });
       return;
     }
