@@ -1,7 +1,7 @@
 import { Boom } from '@hapi/boom';
 import logger from './utils/Logger';
 import makeWASocket, {
-  useSingleFileAuthState,
+  useMultiFileAuthState,
   makeInMemoryStore,
   DisconnectReason,
   AuthenticationState,
@@ -16,15 +16,13 @@ import { isEmoji } from './utils';
 export default class Client {
   SESSION_PATH: string;
   STORE_PATH: string;
-  stateObject: {
-    state: AuthenticationState;
-    saveState: () => void;
-  };
+  stateObject: Awaited<ReturnType<typeof useMultiFileAuthState>>;
   store: ReturnType<typeof makeInMemoryStore>;
   socket: ReturnType<typeof makeWASocket> | null;
+  events: { event: string; on: () => void }[];
 
   constructor() {
-    this.SESSION_PATH = 'sessions/0_cred.json';
+    this.SESSION_PATH = 'sessions/0_state';
 
     this.STORE_PATH = 'sessions/0_store.json';
 
@@ -35,12 +33,13 @@ export default class Client {
       this.store.writeToFile(this.STORE_PATH);
     }, 10 * 1000);
 
-    this.stateObject = useSingleFileAuthState(this.SESSION_PATH);
-
     this.socket = null;
+    this.events = [];
   }
 
-  init() {
+  async init() {
+    this.stateObject = await useMultiFileAuthState(this.SESSION_PATH);
+
     this.socket = makeWASocket({
       auth: this.stateObject.state,
       logger: logger,
@@ -60,28 +59,40 @@ export default class Client {
           throw new Error(`Connection closed due to: Logged Out`);
         }
       }
-
-      console.log('Connected!');
     });
 
-    this.socket.ev.on('creds.update', this.stateObject.saveState);
+    this.socket.ev.on('creds.update', this.stateObject.saveCreds);
+    this.events.map((event) => {
+      event.on();
+      logger.debug({ event: event.event }, 'listening for Event');
+    });
   }
 
   onMessage(callback: (message: WAMessage) => void) {
-    this.socket?.ev.on('messages.upsert', (data) => {
-      const { messages, type } = data;
-      if (type !== 'notify') return;
+    this.events.push({
+      event: 'messages.upsert',
+      on: () => {
+        this.socket?.ev.on('messages.upsert', (data) => {
+          const { messages, type } = data;
+          if (type !== 'notify') return;
 
-      for (const _msg of messages) {
-        callback(_msg);
+          for (const _msg of messages) {
+            callback(_msg);
+          }
+        });
       }
     });
   }
 
   onChatUpdate(callback: (message: Chat) => void) {
-    this.socket?.ev.on('chats.upsert', (data) => {
-      for (const _chat of data) {
-        callback(_chat);
+    this.events.push({
+      event: 'chats.upsert',
+      on: () => {
+        this.socket?.ev.on('chats.upsert', (data) => {
+          for (const _chat of data) {
+            callback(_chat);
+          }
+        });
       }
     });
   }
