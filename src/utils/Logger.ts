@@ -6,7 +6,8 @@ import pino from 'pino';
 const logger = pino({
   transport: {
     target: process.env.NODE_ENV === 'production' ? './pino-pretty-transport.js' : './pino-pretty-transport.ts'
-  }
-}).child({ level: process.env.NODE_ENV === 'production' ? 'info' : 'debug' });
+  },
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug'
+});
 
 export default logger;
