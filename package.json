@@ -9,7 +9,7 @@
     "start": "NODE_ENV=production node lib/index.js"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "^4.1.0",
+    "@adiwajshing/baileys": "https://github.com/adiwajshing/Baileys.git",
     "@adiwajshing/keyed-db": "^0.2.4",
     "anime-image-search": "https://github.com/EmersonDoAmaral/anime-image-search.git",
     "dotenv": "^16.0.0",
