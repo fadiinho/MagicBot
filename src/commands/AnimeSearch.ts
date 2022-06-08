@@ -22,7 +22,7 @@ export default class AnimeSearch implements Command {
     });
 
     if (!hasQuotedMessage) {
-      await client.reactToMsg(messageInfo.key, '❌');
+      await client.reactToMsg(messageInfo.key, { emoji: '❌' });
       data.reply({ text: 'Você precisa marcar uma imagem.' });
       return;
     }
@@ -30,11 +30,12 @@ export default class AnimeSearch implements Command {
     const type = quoted.messageType;
 
     if (!quoted.hasMedia || type !== 'imageMessage') {
-      await client.reactToMsg(messageInfo.key, '❌');
+      await client.reactToMsg(messageInfo.key, { emoji: '❌' });
       data.reply({ text: 'A mensagem marcada precisa conter uma imagem.' });
       return;
     }
 
+    await client.reactToMsg(messageInfo.key, { emoji: '⌛' });
     data.reply({ text: 'Um momento, estou procurando a imagem.' });
     // @ts-ignore
     const stream: ReturnType<typeof downloadContentFromMessage> = await downloadContentFromMessage(
@@ -53,12 +54,14 @@ export default class AnimeSearch implements Command {
       hide: 1,
       min_similarity: 72
     });
-
     if (!result.length) {
+      await client.reactToMsg(messageInfo.key, { remove: true });
       data.reply({ text: 'Infelizmente não encontrei a fonte 😔' });
       return;
     }
 
+    await client.reactToMsg(messageInfo.key, { remove: true });
+    await client.reactToMsg(messageInfo.key, { emoji: '✅' });
     // @ts-ignore
     const { data: imgData } = result[0];
 

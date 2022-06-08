@@ -37,6 +37,6 @@ export default class ReactToMsg implements Command {
 
     if (!quotedMessage) return;
 
-    await client.reactToMsg(quotedMessage.key, emoji);
+    await client.reactToMsg(quotedMessage.key, { emoji });
   }
 }

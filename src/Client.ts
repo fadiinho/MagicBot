@@ -4,11 +4,11 @@ import makeWASocket, {
   useMultiFileAuthState,
   makeInMemoryStore,
   DisconnectReason,
-  AuthenticationState,
   WAMessage,
   Chat,
   WAMessageKey,
-  jidNormalizedUser
+  jidNormalizedUser,
+  proto
 } from '@adiwajshing/baileys';
 
 import { isEmoji } from './utils';
@@ -97,21 +97,31 @@ export default class Client {
     });
   }
 
-  async reactToMsg(key: WAMessageKey, emoji: string) {
-    if (!isEmoji(emoji)) {
-      throw new Error(`${emoji} is not a valid emoji`);
+  async reactToMsg(key: WAMessageKey, options: { emoji?: string; remove?: boolean }) {
+    if (!isEmoji(options.emoji) && !options.remove) {
+      throw new Error(`${options.emoji} is not a valid emoji`);
     }
 
-    const reaction = {
-      react: {
-        text: emoji,
+    let reaction: proto.IReactionMessage;
+
+    if (options.remove) {
+      reaction = {
+        text: '',
         key: {
           ...key,
           participant: key.participant ? jidNormalizedUser(key.participant) : null
         }
-      }
-    };
+      };
+    } else {
+      reaction = {
+        text: options.emoji,
+        key: {
+          ...key,
+          participant: key.participant ? jidNormalizedUser(key.participant) : null
+        }
+      };
+    }
 
-    return await this.socket?.sendMessage(key.remoteJid, reaction);
+    return await this.socket?.sendMessage(key.remoteJid, { react: reaction });
   }
 }
