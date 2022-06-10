@@ -17,7 +17,11 @@ export default async function parse(data: WAMessage, client: Client) {
 
   const type = getContentType(message);
 
-  const mentions = type === 'extendedTextMessage' ? message.extendedTextMessage.contextInfo.mentionedJid : null;
+  console.log(message);
+  const mentions =
+    type === 'extendedTextMessage' && message.extendedTextMessage.hasOwnProperty('contextInfo')
+      ? message.extendedTextMessage.contextInfo.mentionedJid
+      : null;
 
   const text = type === 'extendedTextMessage' ? message.extendedTextMessage.text : message.conversation;
   const splitedText = text.split(' ');
@@ -37,7 +41,11 @@ export default async function parse(data: WAMessage, client: Client) {
     participant: data.key.participant,
     messageType: type,
     hasQuotedMessage:
-      type === 'extendedTextMessage' && message.extendedTextMessage.contextInfo.quotedMessage ? true : false,
+      type === 'extendedTextMessage' &&
+      message.extendedTextMessage.hasOwnProperty('contextInfo') &&
+      message.extendedTextMessage.contextInfo.quotedMessage
+        ? true
+        : false,
     isGroup: isJidGroup(data.key.remoteJid),
     hasMedia: isMedia(type),
     isCommand: command.startsWith(config.prefix),
