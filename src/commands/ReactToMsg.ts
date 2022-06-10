@@ -1,6 +1,6 @@
 import { getContentType, jidNormalizedUser } from '@adiwajshing/baileys';
 import type Client from '../Client';
-import { ParsedData, Command } from '../Types';
+import { ParsedData, Command } from '../structures';
 import isEmoji from '../utils/isEmoji';
 
 export default class ReactToMsg implements Command {

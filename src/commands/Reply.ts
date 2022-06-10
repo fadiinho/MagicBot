@@ -1,5 +1,5 @@
 import Client from '../Client';
-import { Command, ParsedData } from '../Types';
+import { Command, ParsedData } from '../structures';
 
 export default class Reply implements Command {
   name = 'Reply';

@@ -1,5 +1,5 @@
 import Client from '../Client';
-import { Command, ParsedData } from '../Types';
+import { Command, ParsedData } from '../structures';
 import { isAdmin } from '../utils';
 
 export default class TagAll implements Command {

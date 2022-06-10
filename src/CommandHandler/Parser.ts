@@ -4,7 +4,7 @@ dotenv.config();
 import { WAMessage, getContentType, isJidGroup } from '@adiwajshing/baileys';
 import { isMedia } from '../utils';
 import type Client from '../Client';
-import { ParsedData } from '../Types';
+import { ParsedData } from '../structures';
 
 const config = {
   prefix: process.env.PREFIX ? process.env.PREFIX : '!'

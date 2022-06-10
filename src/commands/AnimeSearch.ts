@@ -1,5 +1,5 @@
 import Client from '../Client';
-import { Command, ParsedData } from '../Types';
+import { Command, ParsedData } from '../structures';
 import AnimeApi from 'anime-image-search';
 import { downloadContentFromMessage } from '@adiwajshing/baileys';
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getVideoMeta } from 'tiktok-scraper';
 import type Client from '../Client';
-import { Command, ParsedData } from '../Types';
+import { Command, ParsedData } from '../structures';
 
 export default class TiktokDownload implements Command {
   name = 'tiktok';

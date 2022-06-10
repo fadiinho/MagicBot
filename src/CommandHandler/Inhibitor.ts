@@ -1,4 +1,4 @@
-import { ParsedData, Command } from '../Types';
+import { ParsedData, Command } from '../structures';
 import type Client from '../Client';
 import { jidNormalizedUser } from '@adiwajshing/baileys';
 import { isAdmin } from '../utils';

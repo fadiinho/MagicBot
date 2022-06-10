@@ -2,7 +2,7 @@ import { WAMessage } from '@adiwajshing/baileys';
 import type Client from '../Client';
 import parse from './Parser';
 import commands from '../commands';
-import { Command } from '../Types';
+import { Command } from '../structures';
 import { inhibit } from './Inhibitor';
 
 declare type Options = {

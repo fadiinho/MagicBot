@@ -1,5 +1,5 @@
 import type Client from '../Client';
-import { Command, ParsedData } from '../Types';
+import { Command, ParsedData } from '../structures';
 const BOT_OWNER = process.env.OWNER;
 
 export default class CreateGroup implements Command {

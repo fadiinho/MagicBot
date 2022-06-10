@@ -1,5 +1,5 @@
 import type Client from '../Client';
-import { ParsedData, Command } from '../Types';
+import { ParsedData, Command } from '../structures';
 
 export default class Ping implements Command {
   name = 'Ping';
