@@ -17,7 +17,6 @@ export default async function parse(data: WAMessage, client: Client) {
 
   const type = getContentType(message);
 
-  console.log(message);
   const mentions =
     type === 'extendedTextMessage' && message.extendedTextMessage.hasOwnProperty('contextInfo')
       ? message.extendedTextMessage.contextInfo.mentionedJid
