@@ -1,7 +1,7 @@
 import { WAMessage } from '@adiwajshing/baileys';
 import type Client from '../Client';
 import parse from './Parser';
-import commands from '../commands';
+import * as commands from '../commands';
 import { Command } from '../structures';
 import { inhibit } from './Inhibitor';
 
@@ -26,12 +26,12 @@ class Handler {
   set() {
     const commandsKeys = Object.keys(commands);
     for (const k of commandsKeys) {
-      this.commands.push(new commands[k]());
+      this.commands.push(new commands[k].default());
     }
   }
 
   get(name: string) {
-    return this.commands.find((command) => command.aliases.includes(name));
+    return this.commands.find((command) => command.info.aliases.includes(name));
   }
 
   async handleMessage(data: WAMessage, client: Client) {

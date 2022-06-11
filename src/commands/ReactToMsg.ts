@@ -1,20 +1,17 @@
-import { getContentType, jidNormalizedUser } from '@adiwajshing/baileys';
+import { getContentType } from '@adiwajshing/baileys';
 import type Client from '../Client';
 import { ParsedData, Command } from '../structures';
 import isEmoji from '../utils/isEmoji';
 
-export default class ReactToMsg implements Command {
-  name = 'ReactToMsg';
-  aliases = ['!reagir', '!react', '!rct'];
-  description = '';
-  ownerOnly = true;
+export const info = {
+  name: 'ReactToMsg',
+  aliases: ['!reagir', '!react', '!rct'],
+  description: '',
+  ownerOnly: true
+};
 
-  static info = {
-    name: 'ReactToMsg',
-    aliases: ['!reagir', '!react', '!rct'],
-    description: '',
-    ownerOnly: true
-  };
+export default class ReactToMsg implements Command {
+  info = info;
 
   async execute(data: ParsedData, client: Client) {
     const { hasQuotedMessage, message, splitedText } = data;

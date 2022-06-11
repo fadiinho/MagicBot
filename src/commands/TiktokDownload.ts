@@ -3,16 +3,14 @@ import { getVideoMeta } from 'tiktok-scraper';
 import type Client from '../Client';
 import { Command, ParsedData } from '../structures';
 
-export default class TiktokDownload implements Command {
-  name = 'tiktok';
-  description = '*!tk (opções) <url>*\nBaixa um vídeo do tiktok';
-  aliases = ['!tiktokdownload', '!ttdl', '!tiktokdl', '!tkdl', '!tk'];
+export const info = {
+  name: 'tiktok',
+  description: '*!tk (opções) <url>*\nBaixa um vídeo do tiktok',
+  aliases: ['!tiktokdownload', '!ttdl', '!tiktokdl', '!tkdl', '!tk']
+};
 
-  static info = {
-    name: 'tiktok',
-    description: '*!tk (opções) <url>*\nBaixa um vídeo do tiktok',
-    aliases: ['!tiktokdownload', '!ttdl', '!tiktokdl', '!tkdl', '!tk']
-  };
+export default class TiktokDownload implements Command {
+  info = info;
 
   async execute(data: ParsedData, client: Client): Promise<void> {
     const { splitedText, messageInfo } = data;

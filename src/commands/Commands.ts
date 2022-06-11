@@ -1,17 +1,15 @@
 import Client from '../Client';
 import { Command, ParsedData } from '../structures';
-import commands from './';
+import * as commands from './';
+
+export const info = {
+  name: 'Commands',
+  aliases: ['!commands', '!comandos'],
+  description: '*!comandos*\nComando para ver todos os comandos.'
+};
 
 export default class Commands implements Command {
-  name = 'Commands';
-  aliases = ['!commands', '!comandos'];
-  description = '*!comandos*\nComando para ver todos os comandos.';
-
-  static info = {
-    name: 'Commands',
-    aliases: ['!commands', '!comandos'],
-    description: '*!comandos*\nComando para ver todos os comandos.'
-  };
+  info = info;
 
   execute(data: ParsedData, __: Client): void {
     const keys = Object.keys(commands);

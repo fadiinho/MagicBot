@@ -1,18 +1,15 @@
 import Client from '../Client';
 import { Command, ParsedData } from '../structures';
 
-export default class Reply implements Command {
-  name = 'Reply';
-  aliases = ['!reply'];
-  description = '';
-  ownerOnly = true;
+export const info = {
+  name: 'Reply',
+  aliases: ['!reply'],
+  description: '',
+  ownerOnly: true
+};
 
-  static info = {
-    name: 'Reply',
-    aliases: ['!reply'],
-    description: '',
-    ownerOnly: true
-  };
+export default class Reply implements Command {
+  info = info;
 
   async execute(data: ParsedData, _: Client): Promise<void> {
     const { splitedText } = data;
