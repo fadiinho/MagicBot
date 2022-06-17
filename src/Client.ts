@@ -1,5 +1,4 @@
 import { Boom } from '@hapi/boom';
-import logger from './utils/Logger';
 import makeWASocket, {
   useMultiFileAuthState,
   makeInMemoryStore,
@@ -11,7 +10,7 @@ import makeWASocket, {
   proto
 } from '@adiwajshing/baileys';
 
-import { isEmoji } from './utils';
+import { isEmoji, logger } from './utils';
 
 export default class Client {
   SESSION_PATH: string;

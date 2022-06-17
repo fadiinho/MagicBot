@@ -1,7 +1,7 @@
 import { getContentType } from '@adiwajshing/baileys';
 import type Client from '../Client';
 import { ParsedData, Command } from '../structures';
-import isEmoji from '../utils/isEmoji';
+import { isEmoji } from '../utils';
 
 export const info = {
   name: 'ReactToMsg',

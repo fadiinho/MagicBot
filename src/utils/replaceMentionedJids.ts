@@ -1,4 +1,4 @@
-export default function replaceMentionedJids(text: string, mentions: string[]) {
+export function replaceMentionedJids(text: string, mentions: string[]) {
   const newMentions = mentions.map((item) => '@' + item.replace('@s.whatsapp.net', ''));
 
   let newText = text;

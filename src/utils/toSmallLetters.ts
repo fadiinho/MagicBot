@@ -1,7 +1,7 @@
 /*
  * Source: https://github.com/guiguicdd/wabase-md/blob/main/lib/global.js
  */
-export default function toSmallLetters(text: string) {
+export function toSmallLetters(text: string) {
   var mapObj = {
     a: 'ᵃ',
     á: 'ᵃ',
