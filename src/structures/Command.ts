@@ -1,5 +1,8 @@
 import { ParsedData } from './ParsedData';
+import { Arg } from '../utils';
 import type Client from '../Client';
+
+// TODO: Add docs
 
 export interface Command {
   info: {
@@ -10,6 +13,7 @@ export interface Command {
     ownerOnly?: boolean;
     pvOnly?: boolean;
     description: string;
+    args?: Arg[];
   };
   execute(data: ParsedData, client: Client): void;
 }

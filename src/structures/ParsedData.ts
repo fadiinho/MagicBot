@@ -7,7 +7,7 @@ import {
   AnyMessageContent
 } from '@adiwajshing/baileys';
 
-export declare type ParsedData = {
+export interface ParsedData {
   messageInfo: WAMessage;
   message: WAMessageContent;
   text: string;

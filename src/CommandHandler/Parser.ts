@@ -41,25 +41,25 @@ export default async function parse(data: WAMessage, client: Client) {
     messageType: type,
     hasQuotedMessage:
       type === 'extendedTextMessage' &&
-      message.extendedTextMessage.hasOwnProperty('contextInfo') &&
-      message.extendedTextMessage.contextInfo.quotedMessage
+        message.extendedTextMessage.hasOwnProperty('contextInfo') &&
+        message.extendedTextMessage.contextInfo.quotedMessage
         ? true
         : false,
     isGroup: isJidGroup(data.key.remoteJid),
     hasMedia: isMedia(type),
     isCommand: command.startsWith(config.prefix),
     isViewOnce: type === 'viewOnceMessage',
-    getMedia: function () {
+    getMedia: function() {
       if (!this.hasMedia) return null;
 
       return this.message[this.messageType];
     },
-    getGroupMetadata: async function () {
+    getGroupMetadata: async function() {
       if (!this.isGroup) return;
 
       return await client.socket.groupMetadata(this.from);
     },
-    getQuotedMessage: async function (): Promise<ParsedData | null> {
+    getQuotedMessage: async function(): Promise<ParsedData | null> {
       const quotedId = this.hasMedia
         ? this.message[this.messageType].contextInfo?.stanzaId
         : this.message?.extendedTextMessage?.contextInfo?.stanzaId;
@@ -74,7 +74,7 @@ export default async function parse(data: WAMessage, client: Client) {
 
       return quotedMessage;
     },
-    reply: async function (content) {
+    reply: async function(content) {
       const response = client.socket.sendMessage(this.from, content, { quoted: this.messageInfo });
       return response;
     }
