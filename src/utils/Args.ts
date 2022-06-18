@@ -1,20 +1,30 @@
-interface Arg {
+export interface Arg {
   name: string;
   description?: string;
-  content?: string;
   pattern?: RegExp;
   argsRequired: boolean;
   subCommands?: Arg[];
+  default: boolean;
 }
 
-class ArgsParser {
-  static parse(text: string, args: Arg[]) {
+export interface ParsedArgs {
+  name?: string;
+  matchedCommand?: Arg;
+  matchedArgs?: string[];
+  subCommands?: ParsedArgs;
+  error?: string;
+  message?: string
+}
+
+
+export class ArgsParser {
+  static parse(text: string, args: Arg[]): ParsedArgs {
     if (args.length === 0) return;
     const splitedText = text.split(' ');
     let commands = splitedText.slice(1);
     const command = commands[0];
-    commands = commands.slice(1);
-    const expectedCommand = args.find(arg => arg.name === command);
+    commands = commands.length === 1 ? commands : commands.slice(1);
+    const expectedCommand = args.find(arg => arg.name === command) || args.find(arg => arg.default);
 
     let arg: string[] = [];
 
@@ -30,9 +40,10 @@ class ArgsParser {
     if (expectedCommand.argsRequired && arg.length === 0) return { error: 'args required', message: 'This command requires args.' };
 
     return {
-      name: command,
+      name: expectedCommand.name,
       matchedArgs: arg,
-      subCommands: this.parse(commands.join(' '), expectedCommand.subCommands || [])
+      subCommands: expectedCommand.subCommands ? this.parse(commands.join(' '), expectedCommand.subCommands) : undefined,
+      matchedCommand: expectedCommand
     };
   }
 }
