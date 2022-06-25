@@ -10,6 +10,8 @@ import makeWASocket, {
   proto
 } from '@adiwajshing/baileys';
 
+import type Handler from './CommandHandler';
+
 import { isEmoji, logger } from './utils';
 
 export default class Client {
@@ -19,14 +21,16 @@ export default class Client {
   store: ReturnType<typeof makeInMemoryStore>;
   socket: ReturnType<typeof makeWASocket> | null;
   events: { event: string; on: () => void }[];
+  handler: Handler | undefined;
 
-  constructor() {
+  constructor(handler?: Handler) {
     this.SESSION_PATH = 'sessions/0_state';
 
     this.STORE_PATH = 'sessions/0_store.json';
 
     this.store = makeInMemoryStore({});
     this.store.readFromFile(this.STORE_PATH);
+    this.handler = handler;
 
     setInterval(() => {
       this.store.writeToFile(this.STORE_PATH);

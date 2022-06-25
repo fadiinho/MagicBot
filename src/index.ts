@@ -5,7 +5,7 @@ const handler = new CommandHandler({
   commandsDir: 'src/commands/'
 });
 
-const client = new Client();
+const client = new Client(handler);
 
 client.init();
 
