@@ -38,11 +38,14 @@ class Handler {
     const parsedData = await parse(data, client);
 
     if (!parsedData.isCommand) return;
+
     const command = this.get(parsedData.command);
+
+    if (!command) return;
 
     const result = await inhibit(parsedData, client, command);
 
-    if (!result || !command) return;
+    if (!result) return;
 
     command.execute(parsedData, client);
   }
