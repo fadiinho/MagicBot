@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getVideoMeta } from 'tiktok-scraper';
+import { getUserProfileInfo, getVideoMeta } from 'tiktok-scraper';
 import type Client from '../Client';
 import { Command, ParsedData } from '../structures';
 import { ArgsParser } from '../utils';
@@ -20,8 +20,7 @@ export const info = {
       name: 'info',
       default: false,
       description: 'Mostra informações do vídeo ou usuário.',
-      argsRequired: true,
-      pattern: /^https:\/\/www\.tiktok\.com\/@[\w.-]+/
+      argsRequired: true
     }
   ]
 };
@@ -29,11 +28,18 @@ export const info = {
 export default class TiktokDownload implements Command {
   info = info;
 
-  async download(url: string, data: ParsedData, client: Client) {
+  constructor() {
+    this.info.args.forEach((item) => {
+      Object.assign(item, { run: eval(`this._${item.name}`) });
+    });
+  }
+
+  async _download(data: ParsedData, { client, args }) {
     const { messageInfo } = data;
+
     await client.reactToMsg(messageInfo.key, { emoji: '⏳' });
 
-    const tiktok = await getVideoMeta(url);
+    const tiktok = await getVideoMeta(args[0]);
 
     const { videoUrl, text, authorMeta } = tiktok.collector[0];
 
@@ -56,6 +62,10 @@ export default class TiktokDownload implements Command {
     data.reply({ caption: msg, video });
   }
 
+  async _info(data: ParsedData, { args }) {
+    console.log(args);
+  }
+
   async execute(data: ParsedData, client: Client): Promise<void> {
     const {
       text
@@ -65,17 +75,11 @@ export default class TiktokDownload implements Command {
 
     if (args.error === 'args required') {
       data.reply({
-        text: 'Você precisa informar a url do vídeo.'
+        text: 'Você precisa informar a url.'
       });
       return;
     }
 
-    switch (args.name) {
-      case 'download':
-        this.download(args.matchedArgs[0], data, client);
-        break;
-      default:
-        break
-    }
+    args.matchedCommand.run(data, { client, args: args.matchedArgs });
   }
 }

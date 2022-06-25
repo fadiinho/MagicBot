@@ -1,3 +1,5 @@
+import { ParsedData } from "../structures";
+
 export interface Arg {
   name: string;
   description?: string;
@@ -5,6 +7,7 @@ export interface Arg {
   argsRequired: boolean;
   subCommands?: Arg[];
   default: boolean;
+  run?: (data: ParsedData, ...args: any) => any;
 }
 
 export interface ParsedArgs {
