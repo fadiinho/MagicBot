@@ -5,7 +5,8 @@ import { isAdmin } from '../utils';
 export const info = {
   name: 'TagAll',
   aliases: ['!tagall', '!marcartodos'],
-  description: '*!tagall*\nMarque todos no grupo.',
+  description: 'Marque todos no grupo.',
+  help: '*!tagall*',
   adminOnly: true,
   groupOnly: true
 };

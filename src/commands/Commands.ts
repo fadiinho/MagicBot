@@ -5,7 +5,8 @@ import * as commands from './';
 export const info = {
   name: 'Commands',
   aliases: ['!commands', '!comandos'],
-  description: '*!comandos*\nComando para ver todos os comandos.'
+  description: 'Comando para ver todos os comandos.',
+  help: '*!comandos*'
 };
 
 export default class Commands implements Command {
@@ -16,9 +17,10 @@ export default class Commands implements Command {
     let text = '*Ｃｏｍａｎｄｏｓ Ｄｉｓｐｏｎíｖｅｉｓ:*';
 
     keys.forEach((k) => {
-      const { description } = commands[k].info;
+      const { description, help } = commands[k].info;
       if (description) {
-        text += '\n\n' + description;
+        text += '\n\n' + help
+        text += '\n' + description;
       }
     });
 

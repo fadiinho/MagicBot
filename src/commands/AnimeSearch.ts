@@ -6,7 +6,8 @@ import { downloadContentFromMessage } from '@adiwajshing/baileys';
 export const info = {
   name: 'Anime Search',
   aliases: ['!sauce', '!animesearch'],
-  description: '*!sauce*\nComando para encontrar a fonte de uma imagem (anime).'
+  description: 'Comando para encontrar a fonte de uma imagem (anime).',
+  help: '*!sauce*'
 };
 export default class AnimeSearch implements Command {
   info = info;

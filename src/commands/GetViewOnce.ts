@@ -5,7 +5,8 @@ import { ParsedData, Command } from '../structures';
 export const info = {
   name: 'GetViewOnce',
   aliases: ['!getvo', '!getviewonce'],
-  description: `*!getvo*\nComando para pegar a mídia da mensagem única`
+  description: `Comando para pegar a mídia da mensagem única.`,
+  help: '*!getvo*'
 };
 
 export default class GetViewOnce implements Command {

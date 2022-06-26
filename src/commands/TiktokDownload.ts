@@ -6,8 +6,9 @@ import { ArgsParser } from '../utils';
 
 export const info = {
   name: 'tiktok',
-  description: '*!tk (opções) <url>*\nBaixa um vídeo do tiktok',
+  description: 'Baixa um vídeo do tiktok',
   aliases: ['!tiktokdownload', '!ttdl', '!tiktokdl', '!tkdl', '!tk'],
+  help: '*!tk (opções) <url>*',
   args: [
     {
       name: 'download',
