@@ -1,6 +1,5 @@
 import Client from '../Client';
 import { Command, ParsedData } from '../structures';
-import * as commands from './';
 
 export const info = {
   name: 'Commands',
@@ -12,12 +11,13 @@ export const info = {
 export default class Commands implements Command {
   info = info;
 
-  execute(data: ParsedData, __: Client): void {
-    const keys = Object.keys(commands);
+  execute(data: ParsedData, client: Client): void {
+    const commands = client.handler.commands;
+
     let text = '*Ｃｏｍａｎｄｏｓ Ｄｉｓｐｏｎíｖｅｉｓ:*';
 
-    keys.forEach((k) => {
-      const { description, help } = commands[k].info;
+    commands.forEach((item) => {
+      const { description, help } = item.info;
       if (description) {
         text += '\n\n' + help
         text += '\n' + description;
