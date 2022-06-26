@@ -14,6 +14,7 @@ export interface Command {
     pvOnly?: boolean;
     description: string;
     args?: Arg[];
+    help?: string;
   };
   execute(data: ParsedData, client: Client): void;
 }

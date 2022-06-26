@@ -15,3 +15,4 @@ export * as TagAll from './TagAll';
 export * as Commands from './Commands';
 export * as AnimeSearch from './AnimeSearch';
 export * as TiktokDownload from './TiktokDownload';
+export * as Help from './Help';
