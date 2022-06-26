@@ -2,17 +2,16 @@ import Client from '../Client';
 import { Command, ParsedData } from '../structures';
 import { isAdmin } from '../utils';
 
-export const info = {
-  name: 'TagAll',
-  aliases: ['!tagall', '!marcartodos'],
-  description: 'Marque todos no grupo.',
-  help: '*!tagall*',
-  adminOnly: true,
-  groupOnly: true
-};
 
 export default class TagAll implements Command {
-  info = info;
+  info = {
+    name: 'TagAll',
+    aliases: ['!tagall', '!marcartodos'],
+    description: 'Marque todos no grupo.',
+    help: '*!tagall*',
+    adminOnly: true,
+    groupOnly: true
+  };
 
   async execute(data: ParsedData, client: Client) {
     const { from, isGroup, participant } = data;

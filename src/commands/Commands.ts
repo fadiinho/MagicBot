@@ -1,15 +1,14 @@
 import Client from '../Client';
 import { Command, ParsedData } from '../structures';
 
-export const info = {
-  name: 'Commands',
-  aliases: ['!commands', '!comandos'],
-  description: 'Comando para ver todos os comandos.',
-  help: '*!comandos*'
-};
 
 export default class Commands implements Command {
-  info = info;
+  info = {
+    name: 'Commands',
+    aliases: ['!commands', '!comandos'],
+    description: 'Comando para ver todos os comandos.',
+    help: '*!comandos*'
+  };
 
   execute(data: ParsedData, client: Client): void {
     const commands = client.handler.commands;

@@ -3,14 +3,13 @@ import { Command, ParsedData } from '../structures';
 import AnimeApi from 'anime-image-search';
 import { downloadContentFromMessage } from '@adiwajshing/baileys';
 
-export const info = {
-  name: 'Anime Search',
-  aliases: ['!sauce', '!animesearch'],
-  description: 'Comando para encontrar a fonte de uma imagem (anime).',
-  help: '*!sauce*'
-};
 export default class AnimeSearch implements Command {
-  info = info;
+  info = {
+    name: 'Anime Search',
+    aliases: ['!sauce', '!animesearch'],
+    description: 'Comando para encontrar a fonte de uma imagem (anime).',
+    help: '*!sauce*'
+  };
 
   async execute(data: ParsedData, client: Client): Promise<void> {
     const { hasQuotedMessage, messageInfo } = data;

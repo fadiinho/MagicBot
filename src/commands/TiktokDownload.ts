@@ -1,33 +1,31 @@
 import axios from 'axios';
-import { getUserProfileInfo, getVideoMeta } from 'tiktok-scraper';
+import { getVideoMeta } from 'tiktok-scraper';
 import type Client from '../Client';
 import { Command, ParsedData } from '../structures';
 import { ArgsParser } from '../utils';
 
-export const info = {
-  name: 'tiktok',
-  description: 'Baixa um vídeo do tiktok',
-  aliases: ['!tiktokdownload', '!ttdl', '!tiktokdl', '!tkdl', '!tk'],
-  help: '*!tk (opções) <url>*',
-  args: [
-    {
-      name: 'download',
-      default: true,
-      description: 'Baixe um vídeo do TikTok.',
-      argsRequired: true,
-      pattern: /^https:\/\/www\.tiktok\.com\/@[\w.-]+\/video\/\d+/
-    },
-    {
-      name: 'info',
-      default: false,
-      description: 'Mostra informações do vídeo ou usuário.',
-      argsRequired: true
-    }
-  ]
-};
-
 export default class TiktokDownload implements Command {
-  info = info;
+  info = {
+    name: 'tiktok',
+    description: 'Baixa um vídeo do tiktok',
+    aliases: ['!tiktokdownload', '!ttdl', '!tiktokdl', '!tkdl', '!tk'],
+    help: '*!tk (opções) <url>*',
+    args: [
+      {
+        name: 'download',
+        default: true,
+        description: 'Baixe um vídeo do TikTok.',
+        argsRequired: true,
+        pattern: /^https:\/\/www\.tiktok\.com\/@[\w.-]+\/video\/\d+/
+      },
+      {
+        name: 'info',
+        default: false,
+        description: 'Mostra informações do vídeo ou usuário.',
+        argsRequired: true
+      }
+    ]
+  };
 
   constructor() {
     this.info.args.forEach((item) => {

@@ -2,23 +2,21 @@ import Client from '../Client';
 import { Command, ParsedData } from '../structures';
 import { ArgsParser } from '../utils';
 
-export const info = {
-  name: 'help',
-  aliases: ['!help', '!ajuda'],
-  description: 'Comando para ver ajuda de outro comando.',
-  help: '*!ajuda <comando>*',
-  args: [
-    {
-      name: 'help',
-      default: true,
-      description: 'Ver ajuda.',
-      argsRequired: true,
-    }
-  ]
-};
-
 export default class Help implements Command {
-  info = info;
+  info = {
+    name: 'help',
+    aliases: ['!help', '!ajuda'],
+    description: 'Comando para ver ajuda de outro comando.',
+    help: '*!ajuda <comando>*',
+    args: [
+      {
+        name: 'help',
+        default: true,
+        description: 'Ver ajuda.',
+        argsRequired: true,
+      }
+    ]
+  };
 
   constructor() {
     this.info.args.forEach((item) => {
@@ -28,7 +26,7 @@ export default class Help implements Command {
 
   _help(data: ParsedData, command: Pick<Command, 'info'>) {
     let txt = command.info.help;
-    txt += `\n_aliases: _${command.info.aliases.join(', ')}_`;
+    txt += `\n_aliases: ${command.info.aliases.join(', ')}_`;
     txt += command.info.description ? `\n_description: ${command.info?.description}_` : '';
 
     if (command.info.args) {

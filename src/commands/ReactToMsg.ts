@@ -3,15 +3,13 @@ import type Client from '../Client';
 import { ParsedData, Command } from '../structures';
 import { isEmoji } from '../utils';
 
-export const info = {
-  name: 'ReactToMsg',
-  aliases: ['!reagir', '!react', '!rct'],
-  description: '',
-  ownerOnly: true
-};
-
 export default class ReactToMsg implements Command {
-  info = info;
+  info = {
+    name: 'ReactToMsg',
+    aliases: ['!reagir', '!react', '!rct'],
+    description: '',
+    ownerOnly: true
+  };
 
   async execute(data: ParsedData, client: Client) {
     const { hasQuotedMessage, message, splitedText } = data;

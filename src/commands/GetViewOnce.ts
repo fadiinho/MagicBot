@@ -2,17 +2,17 @@ import { downloadContentFromMessage, getContentType, proto } from '@adiwajshing/
 import type Client from '../Client';
 import { ParsedData, Command } from '../structures';
 
-export const info = {
-  name: 'GetViewOnce',
-  aliases: ['!getvo', '!getviewonce'],
-  description: `Comando para pegar a mídia da mensagem única.`,
-  help: '*!getvo*'
-};
 
 export default class GetViewOnce implements Command {
-  info = info;
-  async execute(data: ParsedData, client: Client) {
-    const { hasQuotedMessage, from, messageInfo } = data;
+  info = {
+    name: 'GetViewOnce',
+    aliases: ['!getvo', '!getviewonce'],
+    description: `Comando para pegar a mídia da mensagem única.`,
+    help: '*!getvo*'
+  };
+
+  async execute(data: ParsedData, _client: Client) {
+    const { hasQuotedMessage } = data;
 
     if (!hasQuotedMessage) return;
     const quotedMessage = await data.getQuotedMessage();
