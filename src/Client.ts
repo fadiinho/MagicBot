@@ -52,7 +52,15 @@ export default class Client {
     this.store.bind(this.socket.ev);
 
     this.socket.ev.on('connection.update', (update) => {
-      const { connection, lastDisconnect } = update;
+      const { connection, lastDisconnect, receivedPendingNotifications } = update;
+
+      if (receivedPendingNotifications && process.env.OWNER) {
+        this.socket.sendMessage(process.env.OWNER, {
+          text: `*Bot is ready!*\n` +
+            `Received all notifications!\n` +
+            `Commands loaded: ${this.handler.commands.length}`
+        });
+      }
 
       if (connection === 'close') {
         if ((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
