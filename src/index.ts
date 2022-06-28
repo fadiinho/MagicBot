@@ -1,9 +1,7 @@
 import Client from './Client';
 import CommandHandler from './CommandHandler';
 
-const handler = new CommandHandler({
-  commandsDir: 'src/commands/'
-});
+const handler = new CommandHandler();
 
 const client = new Client(handler);
 

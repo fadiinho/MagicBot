@@ -8,7 +8,7 @@ export default class TiktokDownload implements Command {
   info = {
     name: 'tiktok',
     description: 'Baixa um vídeo do tiktok',
-    aliases: ['!tiktokdownload', '!ttdl', '!tiktokdl', '!tkdl', '!tk'],
+    aliases: ['tiktokdownload', 'ttdl', 'tiktokdl', 'tkdl', 'tk'],
     help: '*!tk (opções) <url>*',
     args: [
       {

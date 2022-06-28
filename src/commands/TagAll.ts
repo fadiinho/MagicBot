@@ -6,7 +6,7 @@ import { isAdmin } from '../utils';
 export default class TagAll implements Command {
   info = {
     name: 'TagAll',
-    aliases: ['!tagall', '!marcartodos'],
+    aliases: ['tagall', 'marcartodos'],
     description: 'Marque todos no grupo.',
     help: '*!tagall*',
     adminOnly: true,

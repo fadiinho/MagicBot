@@ -6,7 +6,7 @@ import { isEmoji } from '../utils';
 export default class ReactToMsg implements Command {
   info = {
     name: 'ReactToMsg',
-    aliases: ['!reagir', '!react', '!rct'],
+    aliases: ['reagir', 'react', 'rct'],
     description: '',
     ownerOnly: true
   };

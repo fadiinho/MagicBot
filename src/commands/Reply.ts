@@ -6,7 +6,7 @@ import { Command, ParsedData } from '../structures';
 export default class Reply implements Command {
   info = {
     name: 'Reply',
-    aliases: ['!reply'],
+    aliases: ['reply'],
     description: '',
     ownerOnly: true
   };

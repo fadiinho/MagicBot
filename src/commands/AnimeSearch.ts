@@ -6,7 +6,7 @@ import { downloadContentFromMessage } from '@adiwajshing/baileys';
 export default class AnimeSearch implements Command {
   info = {
     name: 'Anime Search',
-    aliases: ['!sauce', '!animesearch'],
+    aliases: ['sauce', 'animesearch'],
     description: 'Comando para encontrar a fonte de uma imagem (anime).',
     help: '*!sauce*'
   };

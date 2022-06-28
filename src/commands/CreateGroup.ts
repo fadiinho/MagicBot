@@ -5,7 +5,7 @@ const BOT_OWNER = process.env.OWNER;
 export default class CreateGroup implements Command {
   info = {
     name: 'Create Group',
-    aliases: ['!creategroup', '!cg', '!criargrupo'],
+    aliases: ['creategroup', 'cg', 'criargrupo'],
     description: 'Comando para o bot criar um grupo!',
     help: '*!creategroup*',
     ownerOnly: true

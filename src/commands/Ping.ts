@@ -5,7 +5,7 @@ import { ParsedData, Command } from '../structures';
 export default class Ping implements Command {
   info = {
     name: 'Ping',
-    aliases: ['!ping'],
+    aliases: ['ping'],
     description: '',
     ownerOnly: true
   };

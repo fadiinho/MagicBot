@@ -5,7 +5,7 @@ import { ArgsParser } from '../utils';
 export default class Help implements Command {
   info = {
     name: 'help',
-    aliases: ['!help', '!ajuda'],
+    aliases: ['help', 'ajuda'],
     description: 'Comando para ver ajuda de outro comando.',
     help: '*!ajuda <comando>*',
     args: [
@@ -52,8 +52,7 @@ export default class Help implements Command {
       return;
     };
 
-    // TODO: Get prefix from config
-    const command = client.handler.get('!' + args.matchedArgs[0]);
+    const command = client.handler.get(args.matchedArgs[0]);
 
     if (!command) {
       data.reply({ text: 'Comando não encontrado' });

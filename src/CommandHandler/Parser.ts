@@ -6,9 +6,7 @@ import { isMedia } from '../utils';
 import type Client from '../Client';
 import { ParsedData } from '../structures';
 
-const config = {
-  prefix: process.env.PREFIX ? process.env.PREFIX : '!'
-};
+import globalConfig from '../config/global.json';
 
 export default async function parse(data: WAMessage, client: Client) {
   const message = data.message;
@@ -24,7 +22,8 @@ export default async function parse(data: WAMessage, client: Client) {
 
   const text = type === 'extendedTextMessage' ? message.extendedTextMessage.text : message.conversation;
   const splitedText = text.split(' ');
-  const command = splitedText[0];
+  const isCommand = splitedText[0].startsWith(globalConfig.prefix)
+  const command = splitedText[0].replace(globalConfig.prefix, '');
 
   const parsedData: ParsedData = {
     messageInfo: data,
@@ -34,6 +33,7 @@ export default async function parse(data: WAMessage, client: Client) {
     mentions,
     messageLength: text.length,
     command,
+    isCommand,
     id: data.key.id,
     from: data.key.remoteJid,
     fromMe: data.key.fromMe,
@@ -47,7 +47,6 @@ export default async function parse(data: WAMessage, client: Client) {
         : false,
     isGroup: isJidGroup(data.key.remoteJid),
     hasMedia: isMedia(type),
-    isCommand: command.startsWith(config.prefix),
     isViewOnce: type === 'viewOnceMessage',
     getMedia: function() {
       if (!this.hasMedia) return null;

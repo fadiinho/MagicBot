@@ -5,22 +5,16 @@ import * as commands from '../commands';
 import { Command } from '../structures';
 import { inhibit } from './Inhibitor';
 
-declare type Options = {
-  commandsDir: string;
-};
+import globalConfig from '../config/global.json';
 
 class Handler {
-  options: Options;
   commands: Command[];
+  config: { prefix?: string; botName?: string }
 
-  constructor(options: Options) {
-    if (!options.commandsDir) {
-      throw new Error('commandsDir not suplied.');
-    }
-
-    this.options = options;
+  constructor() {
     this.commands = [];
     this.set();
+    this.config = globalConfig;
   }
 
   set() {

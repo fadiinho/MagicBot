@@ -5,7 +5,7 @@ import { Command, ParsedData } from '../structures';
 export default class Commands implements Command {
   info = {
     name: 'Commands',
-    aliases: ['!commands', '!comandos'],
+    aliases: ['commands', 'comandos'],
     description: 'Comando para ver todos os comandos.',
     help: '*!comandos*'
   };
