@@ -28,6 +28,6 @@ export interface ParsedData {
   getGroupMetadata(): Promise<GroupMetadata | null>;
   getQuotedMessage(): Promise<ParsedData | null>;
   reply(content: AnyMessageContent): Promise<proto.WebMessageInfo>;
-  getUserPic(highres: boolean): Promise<Buffer>;
-  getGroupPic(highres: boolean): Promise<Buffer>;
+  getUserPic(highres: boolean): Promise<Buffer | null>;
+  getGroupPic(highres: boolean): Promise<Buffer | null>;
 };

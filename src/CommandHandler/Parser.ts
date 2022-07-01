@@ -4,7 +4,7 @@ dotenv.config();
 import axios from 'axios';
 
 import { WAMessage, getContentType, isJidGroup, downloadContentFromMessage } from '@adiwajshing/baileys';
-import { isMedia } from '../utils';
+import { isMedia, logger } from '../utils';
 import type Client from '../Client';
 import { ParsedData } from '../structures';
 
@@ -86,10 +86,20 @@ export default async function parse(data: WAMessage, client: Client) {
       return response;
     },
     getUserPic: async function(highres = false) {
-      const picUrl = await client.socket.profilePictureUrl(this.isGroup ? this.participant : this.from, highres ? 'image' : 'preview');
+
+      const picUrl = await client.socket.profilePictureUrl(this.isGroup ? this.participant : this.from, highres ? 'image' : 'preview').catch((err) => {
+        logger.debug(err, err.message);
+
+        return undefined;
+      });
+
+      if (!picUrl) return null;
+
       const picResponse = await axios.get(picUrl, {
         responseType: 'arraybuffer'
       });
+
+      if (!picResponse.data) return null;
 
       return picResponse.data;
     },
@@ -98,10 +108,19 @@ export default async function parse(data: WAMessage, client: Client) {
         throw new Error('Not a group!');
       }
 
-      const picUrl = await client.socket.profilePictureUrl(this.from, highres ? 'image' : 'preview');
+      const picUrl = await client.socket.profilePictureUrl(this.from, highres ? 'image' : 'preview').catch((err) => {
+        logger.debug(err, err.message)
+
+        return undefined;
+      });
+
+      if (!picUrl) return null;
+
       const picResponse = await axios.get(picUrl, {
         responseType: 'arraybuffer'
       });
+
+      if (!picResponse.data) return null;
 
       return picResponse.data;
     },
