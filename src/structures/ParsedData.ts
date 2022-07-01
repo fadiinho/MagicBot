@@ -1,7 +1,6 @@
 import {
   WAMessage,
   WAMessageContent,
-  MessageType,
   GroupMetadata,
   proto,
   AnyMessageContent
@@ -25,7 +24,7 @@ export interface ParsedData {
   hasMedia: boolean;
   isCommand: boolean;
   isViewOnce: boolean;
-  getMedia(): MessageType | null;
+  getMedia(): Promise<Buffer | null>;
   getGroupMetadata(): Promise<GroupMetadata | null>;
   getQuotedMessage(): Promise<ParsedData | null>;
   reply(content: AnyMessageContent): Promise<proto.WebMessageInfo>;

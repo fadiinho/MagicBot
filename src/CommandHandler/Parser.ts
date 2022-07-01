@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { WAMessage, getContentType, isJidGroup } from '@adiwajshing/baileys';
+import { WAMessage, getContentType, isJidGroup, downloadContentFromMessage } from '@adiwajshing/baileys';
 import { isMedia } from '../utils';
 import type Client from '../Client';
 import { ParsedData } from '../structures';
@@ -48,10 +48,16 @@ export default async function parse(data: WAMessage, client: Client) {
     isGroup: isJidGroup(data.key.remoteJid),
     hasMedia: isMedia(type),
     isViewOnce: type === 'viewOnceMessage',
-    getMedia: function() {
+    getMedia: async function() {
       if (!this.hasMedia) return null;
+      const stream = await downloadContentFromMessage(this.message[this.messageType], this.messageType === 'imageMessage' ? 'image' : 'video');
+      let buffer = Buffer.from([]);
 
-      return this.message[this.messageType];
+      for await (const chunk of stream) {
+        buffer = Buffer.concat([buffer, chunk])
+      }
+
+      return buffer;
     },
     getGroupMetadata: async function() {
       if (!this.isGroup) return;
