@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import axios from 'axios';
+
 import { WAMessage, getContentType, isJidGroup, downloadContentFromMessage } from '@adiwajshing/baileys';
 import { isMedia } from '../utils';
 import type Client from '../Client';
@@ -82,7 +84,27 @@ export default async function parse(data: WAMessage, client: Client) {
     reply: async function(content) {
       const response = client.socket.sendMessage(this.from, content, { quoted: this.messageInfo });
       return response;
-    }
+    },
+    getUserPic: async function(highres = false) {
+      const picUrl = await client.socket.profilePictureUrl(this.isGroup ? this.participant : this.from, highres ? 'image' : 'preview');
+      const picResponse = await axios.get(picUrl, {
+        responseType: 'arraybuffer'
+      });
+
+      return picResponse.data;
+    },
+    getGroupPic: async function(highres = false) {
+      if (!this.isGroup) {
+        throw new Error('Not a group!');
+      }
+
+      const picUrl = await client.socket.profilePictureUrl(this.from, highres ? 'image' : 'preview');
+      const picResponse = await axios.get(picUrl, {
+        responseType: 'arraybuffer'
+      });
+
+      return picResponse.data;
+    },
   };
 
   return parsedData;
