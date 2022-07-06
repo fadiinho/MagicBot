@@ -1,4 +1,5 @@
 {
   "botName": "Magic Bot",
-  "prefix": "!"
+  "prefix": "!",
+  "autoReadMessages": true
 }

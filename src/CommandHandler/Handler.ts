@@ -9,7 +9,7 @@ import globalConfig from '../config/global.json';
 
 class Handler {
   commands: Command[];
-  config: { prefix?: string; botName?: string }
+  config: { prefix?: string; botName?: string, autoReadMessages?: boolean }
 
   constructor() {
     this.commands = [];
@@ -40,6 +40,7 @@ class Handler {
     const result = await inhibit(parsedData, client, command);
 
     if (!result) return;
+    if (this.config.autoReadMessages) client.socket.readMessages([parsedData.messageInfo.key]);
 
     command.execute(parsedData, client);
   }
