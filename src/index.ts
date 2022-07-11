@@ -1,6 +1,7 @@
 import Client from './Client';
 import CommandHandler from './CommandHandler';
 import twitch from './services/twitch';
+import bind from './services/socket-server';
 
 const handler = new CommandHandler();
 
@@ -15,3 +16,4 @@ client.onChatUpdate((chat) => {
 });
 
 twitch();
+bind(client)
