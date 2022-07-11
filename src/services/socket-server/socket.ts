@@ -1,11 +1,11 @@
 import { Server } from 'socket.io';
 import { logger } from '../../utils';
-import httpServer from './server';
+import httpServer from '../server';
 import { onBlockUser } from './events';
 
 const socket = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:3000'
+    origin: process.env.HOSTNAME + ':' + process.env.PORT
   }
 })
 

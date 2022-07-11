@@ -5,14 +5,14 @@ import { logger } from '../../utils';
 
 const port = process.env.PORT || 3000;
 
-const app = express();
+export const app = express();
 
 app.use(express.static('public'));
 
 const server = http.createServer(app);
 
 app.get('/', (_req, res) => {
-  res.sendFile(join(__dirname, '../../../public/index.html'))
+  res.sendFile('public/index.html')
 })
 
 server.listen(port, () => {
