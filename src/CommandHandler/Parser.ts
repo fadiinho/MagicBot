@@ -24,7 +24,7 @@ export default async function parse(data: WAMessage, client: Client) {
 
   const text = type === 'extendedTextMessage' ? message.extendedTextMessage.text : message.conversation;
   const splitedText = text.split(' ');
-  const isCommand = splitedText[0].startsWith(globalConfig.prefix)
+  const isCommand = splitedText[0].startsWith(globalConfig.prefix);
   const command = splitedText[0].replace(globalConfig.prefix, '');
 
   const parsedData: ParsedData = {
@@ -43,30 +43,33 @@ export default async function parse(data: WAMessage, client: Client) {
     messageType: type,
     hasQuotedMessage:
       type === 'extendedTextMessage' &&
-        message.extendedTextMessage.hasOwnProperty('contextInfo') &&
-        message.extendedTextMessage.contextInfo.quotedMessage
+      message.extendedTextMessage.hasOwnProperty('contextInfo') &&
+      message.extendedTextMessage.contextInfo.quotedMessage
         ? true
         : false,
     isGroup: isJidGroup(data.key.remoteJid),
     hasMedia: isMedia(type),
     isViewOnce: type === 'viewOnceMessage',
-    getMedia: async function() {
+    getMedia: async function () {
       if (!this.hasMedia) return null;
-      const stream = await downloadContentFromMessage(this.message[this.messageType], this.messageType === 'imageMessage' ? 'image' : 'video');
+      const stream = await downloadContentFromMessage(
+        this.message[this.messageType],
+        this.messageType === 'imageMessage' ? 'image' : 'video'
+      );
       let buffer = Buffer.from([]);
 
       for await (const chunk of stream) {
-        buffer = Buffer.concat([buffer, chunk])
+        buffer = Buffer.concat([buffer, chunk]);
       }
 
       return buffer;
     },
-    getGroupMetadata: async function() {
+    getGroupMetadata: async function () {
       if (!this.isGroup) return;
 
       return await client.socket.groupMetadata(this.from);
     },
-    getQuotedMessage: async function(): Promise<ParsedData | null> {
+    getQuotedMessage: async function (): Promise<ParsedData | null> {
       const quotedId = this.hasMedia
         ? this.message[this.messageType].contextInfo?.stanzaId
         : this.message?.extendedTextMessage?.contextInfo?.stanzaId;
@@ -81,13 +84,35 @@ export default async function parse(data: WAMessage, client: Client) {
 
       return quotedMessage;
     },
-    reply: async function(content) {
-      const response = client.socket.sendMessage(this.from, content, { quoted: this.messageInfo });
+    reply: async function (content, options) {
+      const response = client.socket.sendMessage(this.from, content, { quoted: this.messageInfo, ...options });
       return response;
     },
-    getUserPic: async function(highres = false) {
+    getUserPic: async function (highres = false) {
+      const picUrl = await client.socket
+        .profilePictureUrl(this.isGroup ? this.participant : this.from, highres ? 'image' : 'preview')
+        .catch((err) => {
+          logger.debug(err, err.message);
 
-      const picUrl = await client.socket.profilePictureUrl(this.isGroup ? this.participant : this.from, highres ? 'image' : 'preview').catch((err) => {
+          return undefined;
+        });
+
+      if (!picUrl) return null;
+
+      const picResponse = await axios.get(picUrl, {
+        responseType: 'arraybuffer'
+      });
+
+      if (!picResponse.data) return null;
+
+      return picResponse.data;
+    },
+    getGroupPic: async function (highres = false) {
+      if (!this.isGroup) {
+        throw new Error('Not a group!');
+      }
+
+      const picUrl = await client.socket.profilePictureUrl(this.from, highres ? 'image' : 'preview').catch((err) => {
         logger.debug(err, err.message);
 
         return undefined;
@@ -102,28 +127,7 @@ export default async function parse(data: WAMessage, client: Client) {
       if (!picResponse.data) return null;
 
       return picResponse.data;
-    },
-    getGroupPic: async function(highres = false) {
-      if (!this.isGroup) {
-        throw new Error('Not a group!');
-      }
-
-      const picUrl = await client.socket.profilePictureUrl(this.from, highres ? 'image' : 'preview').catch((err) => {
-        logger.debug(err, err.message)
-
-        return undefined;
-      });
-
-      if (!picUrl) return null;
-
-      const picResponse = await axios.get(picUrl, {
-        responseType: 'arraybuffer'
-      });
-
-      if (!picResponse.data) return null;
-
-      return picResponse.data;
-    },
+    }
   };
 
   return parsedData;

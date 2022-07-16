@@ -3,7 +3,8 @@ import {
   WAMessageContent,
   GroupMetadata,
   proto,
-  AnyMessageContent
+  AnyMessageContent,
+  MiscMessageGenerationOptions
 } from '@adiwajshing/baileys';
 
 export interface ParsedData {
@@ -27,7 +28,7 @@ export interface ParsedData {
   getMedia(): Promise<Buffer | null>;
   getGroupMetadata(): Promise<GroupMetadata | null>;
   getQuotedMessage(): Promise<ParsedData | null>;
-  reply(content: AnyMessageContent): Promise<proto.WebMessageInfo>;
+  reply(content: AnyMessageContent, options?: MiscMessageGenerationOptions): Promise<proto.WebMessageInfo>;
   getUserPic(highres: boolean): Promise<Buffer | null>;
   getGroupPic(highres: boolean): Promise<Buffer | null>;
-};
+}
