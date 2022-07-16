@@ -12,19 +12,23 @@ export default class Twitch implements Command {
     aliases: ['twitch', 'tw'],
     description: 'Ver informações de um canal da twitch',
     help: `*${prefix}twitch* <username>`,
-    args: [{
-      name: 'info',
-      description: 'Ver informações.',
-      default: true,
-      argsRequired: true,
-      subCommands: [{
-        name: 'user',
+    args: [
+      {
+        name: 'info',
+        description: 'Ver informações.',
         default: true,
-        description: 'Ver informações de um usuário',
-        argsRequired: true
-      }]
-    }]
-  }
+        argsRequired: true,
+        subCommands: [
+          {
+            name: 'user',
+            default: true,
+            description: 'Ver informações de um usuário',
+            argsRequired: true
+          }
+        ]
+      }
+    ]
+  };
 
   constructor() {
     this.info.args.forEach((item) => {
@@ -33,28 +37,25 @@ export default class Twitch implements Command {
   }
 
   async _info(data: ParsedData, ...args: any) {
-    const matchedArgs = args[0]
+    const matchedArgs = args[0];
 
-    const user = await getUser(matchedArgs[0])
+    const user = await getUser(matchedArgs[0]);
 
-    const response = await axios.get(user.userPicture, {
+    const response = await axios.get(user.profilePictureUrl, {
       responseType: 'arraybuffer'
     });
 
     const image = response.data;
 
-    
-
-    data.reply({ image, caption: `username: ${user.userName}` })
+    data.reply({ image, caption: `username: ${user.name}` });
   }
 
   execute(data: ParsedData, _client: Client): void {
     const { text } = data;
     const args = ArgsParser.parse(text, this.info.args);
 
-
     if (args.error === 'args required') {
-      data.reply({ text: 'Você precisa informar um username.' })
+      data.reply({ text: 'Você precisa informar um username.' });
       return;
     }
 
