@@ -104,6 +104,18 @@ export const getStream = async (userName: string) => {
   return stream;
 };
 
+export const getTotalFollowersCount = async (userName: string) => {
+  if (!userName) throw Error('User name is required.');
+
+  const user = await getUser(userName).catch((err) => {
+    throw new Error(err.message);
+  });
+
+  const followers = service.client.apiClient.users.getFollowsPaginated({ followedUser: user.id });
+
+  return await followers.getTotalCount();
+};
+
 export default async (_client: Client, app?: IRouter) => {
   if (!app) return;
   await service.applyMiddleware(app);
