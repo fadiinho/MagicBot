@@ -1,0 +1,23 @@
+[
+  {
+    "eventType": "streamup",
+    "userName": "fadiinho",
+    "message": "Cool message!",
+    "groupMod": {
+      "jid": "123456789@g.us",
+      "mod": {
+        "subject": "cool subject!"
+      }
+    }
+  },
+  {
+    "eventType": "streamdown",
+    "userName": "fadiinho",
+    "groupMod": {
+      "jid": "123456789@g.us",
+      "mod": {
+        "subject": "Cool subject!"
+      }
+    }
+  }
+]
