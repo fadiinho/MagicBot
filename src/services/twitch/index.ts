@@ -116,6 +116,15 @@ export const getTotalFollowersCount = async (userName: string) => {
   return await followers.getTotalCount();
 };
 
+export const getEmotes = async (userName: string) => {
+  if (!userName) throw Error('User name is required.');
+  const user = await getUser(userName);
+
+  const emotes = await service.client.apiClient.chat.getChannelEmotes(user.id);
+
+  return emotes;
+};
+
 export default async (_client: Client, app?: IRouter) => {
   if (!app) return;
   await service.applyMiddleware(app);
