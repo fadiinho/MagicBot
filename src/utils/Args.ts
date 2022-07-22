@@ -1,4 +1,4 @@
-import { ParsedData } from "../structures";
+import { ParsedData } from '../structures';
 
 export interface Arg {
   name: string;
@@ -11,43 +11,42 @@ export interface Arg {
 }
 
 export interface ParsedArgs {
-  name?: string;
   matchedCommand?: Arg;
-  matchedArgs?: string[];
-  subCommands?: ParsedArgs;
-  error?: string;
-  message?: string
+  matchedArg?: string[] | string;
+  matchedSubCommand?: ParsedArgs;
+  error?: boolean;
+  errorMessage?: string;
 }
 
+export const parse = (text: string, args: Arg[], subCommand = false) => {
+  // text => !tw (command) arg [...subCommands] [...args]
+  const splitedText = text.split(' ');
 
-export class ArgsParser {
-  static parse(text: string, args: Arg[]): ParsedArgs {
-    if (args.length === 0) return;
-    const splitedText = text.split(' ');
-    let commands = splitedText.slice(1);
-    const command = commands[0];
-    commands = commands.length === 1 ? commands : commands.slice(1);
-    const expectedCommand = args.find(arg => arg.name === command) || args.find(arg => arg.default);
+  let newSplited = subCommand ? splitedText : splitedText.slice(1); // (command) arg [...subCommands] [...args]
 
-    let arg: string[] = [];
+  const matchedCommand = args.find((_command) => _command.name === newSplited[0]) || args.find((_command) => _command.default);
 
-    if (!expectedCommand) return { error: 'not found', message: `Command "${command}" not found.` };
-    if (expectedCommand.pattern) {
-      arg = commands.filter((cmd) => {
-        return expectedCommand.pattern.test(cmd);
-      });
-    } else {
-      arg = commands;
-    }
+  if (!matchedCommand) {
+    return { error: true, errorMessage: 'command-not-found' };
+  };
 
-    if (expectedCommand.argsRequired && arg.length === 0) return { error: 'args required', message: 'This command requires args.' };
+  newSplited = matchedCommand.default && newSplited[0] !== matchedCommand.name ? newSplited : newSplited.slice(1); // arg [...subCommands] [...args]
 
-    return {
-      name: expectedCommand.name,
-      matchedArgs: arg,
-      subCommands: expectedCommand.subCommands ? this.parse(commands.join(' '), expectedCommand.subCommands) : undefined,
-      matchedCommand: expectedCommand
-    };
+  const matchedArg = newSplited[0]; // -> arg <- [...subCommands] [...args]
+
+  if (!matchedArg && matchedCommand.argsRequired) {
+    return { error: true, errorMessage: 'args-required' };
   }
-}
 
+  if (matchedCommand.pattern) {
+    const isMatched = matchedCommand.pattern.test(matchedArg);
+
+    if (!isMatched) return { error: true, errorMessage: 'wrong-pattern'}
+  }
+
+  newSplited = newSplited.slice(1); // [...subCommands] [...args]
+
+  const matchedSubCommand =  matchedCommand.subCommands && newSplited.length ? parse(newSplited.join(' '), matchedCommand.subCommands, true) : undefined;
+
+  return { matchedCommand, matchedArg, matchedSubCommand }
+}
