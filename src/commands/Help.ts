@@ -1,6 +1,7 @@
 import Client from '../Client';
 import { Command, ParsedData } from '../structures';
-import { ArgsParser } from '../utils';
+import { parse } from '../utils';
+import { prefix } from '../config/global.json';
 
 export default class Help implements Command {
   info = {
@@ -17,12 +18,6 @@ export default class Help implements Command {
       }
     ]
   };
-
-  constructor() {
-    this.info.args.forEach((item) => {
-      Object.assign(item, { run: eval(`this._${item.name}`) });
-    });
-  }
 
   _help(data: ParsedData, command: Pick<Command, 'info'>) {
     let txt = command.info.help;
@@ -45,20 +40,20 @@ export default class Help implements Command {
   execute(data: ParsedData, client: Client): void {
     const { text } = data;
 
-    const args = ArgsParser.parse(text, this.info.args);
+    const args = parse(text, this.info.args);
 
-    if (args.error === 'args required') {
-      data.reply({ text: 'Você precisa informar o nome do comando.' });
+    if (args.error) {
+      data.reply({ text: args.errorMessage });
       return;
-    };
+    }
 
-    const command = client.handler.get(args.matchedArgs[0]);
+    const command = client.handler.get(args.matchedArg as string);
 
     if (!command) {
-      data.reply({ text: 'Comando não encontrado' });
+      data.reply({ text: `Comando não encontrado.\nDigite ${prefix}comandos para ver todos os comandos.`});
       return;
-    };
+    }
 
-    args.matchedCommand.run(data, command);
+    this._help(data, command);
   }
 }

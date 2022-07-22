@@ -2,7 +2,7 @@ import { Command, ParsedData } from '../structures';
 import { prefix } from '../config/global.json';
 import type Client from '../Client';
 
-import { ArgsParser } from '../utils';
+import { parse, ParsedArgs } from '../utils';
 
 export default class WaMe implements Command {
   info = {
@@ -27,8 +27,8 @@ export default class WaMe implements Command {
     });
   }
 
-  _numero(data: ParsedData, ...args: any) {
-    let number: string = args[0][0].replace(/\D/g, '');
+  _numero(data: ParsedData, args: ParsedArgs) {
+    let number: string = (args.matchedArg as string).replace(/\D/g, '');
 
     if (number.length === 11) {
       number = '55' + number;
@@ -39,13 +39,13 @@ export default class WaMe implements Command {
 
   execute(data: ParsedData, _client: Client) {
     const { text } = data;
-    const args = ArgsParser.parse(text, this.info.args);
+    const args = parse(text, this.info.args);
 
-    if (args.error === 'args required') {
-      data.reply({ text: 'Formato inválido.' });
+    if (args.error) {
+      data.reply({ text: args.errorMessage });
       return;
     }
 
-    args.matchedCommand.run(data, args.matchedArgs);
+    this[`_${args.matchedCommand.name}`](data, args)
   }
 }
