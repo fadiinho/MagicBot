@@ -1,7 +1,6 @@
 import { Boom } from '@hapi/boom';
 import makeWASocket, {
   useMultiFileAuthState,
-  makeInMemoryStore,
   DisconnectReason,
   WAMessage,
   Chat,
@@ -14,11 +13,13 @@ import type Handler from './CommandHandler';
 
 import { isEmoji, logger } from './utils';
 
+import { makeMongoStore } from './store';
+
 export default class Client {
   SESSION_PATH: string;
   STORE_PATH: string;
   stateObject: Awaited<ReturnType<typeof useMultiFileAuthState>>;
-  store: ReturnType<typeof makeInMemoryStore>;
+  store: ReturnType<typeof makeMongoStore>;
   socket: ReturnType<typeof makeWASocket> | null;
   events: { event: string; on: () => void }[];
   handler: Handler | undefined;
@@ -28,13 +29,8 @@ export default class Client {
 
     this.STORE_PATH = 'sessions/0_store.json';
 
-    this.store = makeInMemoryStore({});
-    this.store.readFromFile(this.STORE_PATH);
     this.handler = handler;
-
-    setInterval(() => {
-      this.store.writeToFile(this.STORE_PATH);
-    }, 10 * 1000);
+    this.store = makeMongoStore();
 
     this.socket = null;
     this.events = [];
