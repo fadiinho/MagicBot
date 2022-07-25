@@ -2,9 +2,10 @@ import { WAMessage, BaileysEventEmitter, jidNormalizedUser } from '@adiwajshing/
 import { MongoClient, Collection } from 'mongodb';
 import { logger } from '../utils';
 
-export default () => {
+export default (mongoUri: string) => {
+  if (!mongoUri) throw new Error('MongoDB URI is required.');
   const _logger = logger.child({ stream: 'mongodb-store' });
-  const client = new MongoClient(process.env.MONGODB_URI as string);
+  const client = new MongoClient(mongoUri);
   client.connect();
 
   const db = client.db('store');

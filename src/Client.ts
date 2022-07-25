@@ -30,7 +30,7 @@ export default class Client {
     this.STORE_PATH = 'sessions/0_store.json';
 
     this.handler = handler;
-    this.store = makeMongoStore();
+    this.store = makeMongoStore(process.env.MONGODB_URI);
 
     this.socket = null;
     this.events = [];
