@@ -31,7 +31,7 @@ class Handler {
   async handleMessage(data: WAMessage, client: Client) {
     const parsedData = await parse(data, client);
 
-    if (!parsedData.isCommand) return;
+    if (!parsedData || !parsedData?.isCommand) return;
 
     const command = this.get(parsedData.command);
 
