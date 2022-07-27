@@ -1,20 +1,19 @@
 import { WAMessage, BaileysEventEmitter, jidNormalizedUser } from '@adiwajshing/baileys';
-import { MongoClient, Collection } from 'mongodb';
 import { logger } from '../utils';
 
-export default (mongoUri: string) => {
+import { connect } from '../services/db';
+
+
+export default async (mongoUri: string) => {
   if (!mongoUri) throw new Error('MongoDB URI is required.');
   const _logger = logger.child({ stream: 'mongodb-store' });
-  const client = new MongoClient(mongoUri);
-  client.connect();
+
+  const client = await connect(mongoUri); 
 
   const db = client.db('store');
 
   const messagesCol = db.collection('messages');
-  // const chats = db.collection('chats');
 
-
-  //  { [jid: string]: WAMessage[]}
 
   const assertMessagesList = async (jid: string) => {
     const id = jidNormalizedUser(jid);
@@ -76,12 +75,22 @@ export default (mongoUri: string) => {
 
       return msg;
     },
-    deleteAllMessagesFromUser: async (jid: string) => {
+    deleteAllMessagesFromContact: async (jid: string) => {
       const result = await messagesCol.deleteOne({ id: jidNormalizedUser(jid) }); 
 
       _logger.debug({ jid, result }, 'Deleted all messages from user');
 
       return result;
+    },
+    getAllMessagesJids: async () => {
+      const result = messagesCol.find();
+      let docs: string[] = [];
+
+      await result.forEach((doc) => {
+        docs.push(doc.id);
+      })
+
+      return docs;
     }
   }
 }

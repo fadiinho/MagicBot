@@ -19,7 +19,7 @@ export default class Client {
   SESSION_PATH: string;
   STORE_PATH: string;
   stateObject: Awaited<ReturnType<typeof useMultiFileAuthState>>;
-  store: ReturnType<typeof makeMongoStore>;
+  store: Awaited<ReturnType<typeof makeMongoStore>>;
   socket: ReturnType<typeof makeWASocket> | null;
   events: { event: string; on: () => void }[];
   handler: Handler | undefined;
@@ -30,7 +30,6 @@ export default class Client {
     this.STORE_PATH = 'sessions/0_store.json';
 
     this.handler = handler;
-    this.store = makeMongoStore(process.env.MONGODB_URI);
 
     this.socket = null;
     this.events = [];
@@ -38,6 +37,7 @@ export default class Client {
 
   async init() {
     this.stateObject = await useMultiFileAuthState(this.SESSION_PATH);
+    this.store = await makeMongoStore(process.env.MONGODB_URI);
 
     this.socket = makeWASocket({
       auth: this.stateObject.state,
