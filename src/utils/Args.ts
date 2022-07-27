@@ -41,7 +41,7 @@ export const parse = (text: string, args: Arg[], subCommand = false): ParsedArgs
     if (!isMatched) return { error: true, errorMessage: 'wrong-pattern'}
   }
 
-  newSplited = newSplited.slice(1);
+  newSplited = matchedCommand.argsRequired ? newSplited.slice(1) : newSplited;
 
   const matchedSubCommand =  matchedCommand.subCommands && newSplited.length ? parse(newSplited.join(' '), matchedCommand.subCommands, true) : undefined;
 
