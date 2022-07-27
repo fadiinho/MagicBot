@@ -3,3 +3,4 @@ sessions/**/*
 node_modules
 .env
 Test.ts
+src/config/twitch.json
