@@ -1,4 +1,4 @@
-import { WAMessage, BaileysEventEmitter, jidNormalizedUser } from '@adiwajshing/baileys';
+import { WAMessage, BaileysEventEmitter, jidNormalizedUser, updateMessageWithReaction } from '@adiwajshing/baileys';
 import { logger } from '../utils';
 
 import { connect } from '../services/db';
@@ -59,6 +59,24 @@ export default async (mongoUri: string) => {
         const idSet = new Set(item.keys.map(k => k.id));
         listDoc.messages.filter((m: WAMessage) => idSet.has(m.key.id));
         return await messagesCol.updateOne({ id: jid }, { $set: { messages: listDoc.messages }});
+      }
+    });
+
+    ev.on('messages.reaction', async (reactions) => {
+      for (const { key, reaction } of reactions) {
+        const userDoc = await messagesCol.findOne({ id: jidNormalizedUser(key.remoteJid) });
+        const messages = userDoc.messages as WAMessage[];
+        const msg = messages.find((_msg: WAMessage) => _msg.key.id === key.id);
+
+        if (!msg) {
+          return;
+        }
+
+        updateMessageWithReaction(msg, reaction);
+
+        messages[messages.indexOf(msg)] = msg;
+
+        messagesCol.updateOne({ id: userDoc.id }, { $set: { messages }});
       }
     });
   };
