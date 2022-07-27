@@ -16,7 +16,7 @@ export default class WaMe implements Command {
         description: 'Número para gerar o link.',
         default: true,
         argsRequired: true,
-        pattern: /^\([1-9]{2}\)(?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/
+        pattern: /\+?([0-9]{0,3})\(?[1-9]{2,3}\)?9?[0-9]{3,4}-?[0-9]{3,4}/
       }
     ]
   };
