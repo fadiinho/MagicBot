@@ -109,7 +109,7 @@ export default class Client {
       throw new Error(`${options.emoji} is not a valid emoji`);
     }
 
-    let reaction: proto.IReactionMessage;
+    let reaction: proto.Message.IReactionMessage;
 
     if (options.remove) {
       reaction = {

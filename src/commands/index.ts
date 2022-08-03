@@ -10,3 +10,4 @@ export * as Help from './Help';
 export * as Twitch from './Twitch';
 export * as WaMe from './WaMe';
 export * as Database from './Database';
+export * as Test from './Test';

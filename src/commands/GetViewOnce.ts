@@ -21,7 +21,7 @@ export default class GetViewOnce implements Command {
 
     const viewOnceMessage = quotedMessage.message.viewOnceMessage.message;
     const mediaType = getContentType(viewOnceMessage);
-    let media: proto.IImageMessage | proto.IVideoMessage;
+    let media: proto.Message.IImageMessage | proto.Message.IVideoMessage;
 
     if (mediaType === 'imageMessage') {
       media = viewOnceMessage.imageMessage;
