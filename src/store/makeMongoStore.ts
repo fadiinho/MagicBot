@@ -13,6 +13,7 @@ export default async (mongoUri: string) => {
   const db = client.db('store');
 
   const messagesCol = db.collection('messages');
+  const chatsCol = db.collection('chats');
 
 
   const assertMessagesList = async (jid: string) => {
@@ -77,6 +78,18 @@ export default async (mongoUri: string) => {
         messages[messages.indexOf(msg)] = msg;
 
         messagesCol.updateOne({ id: userDoc.id }, { $set: { messages }});
+      }
+    });
+
+    ev.on('chats.upsert', async (updates) => {
+      for (const update of updates) {
+        await chatsCol.updateOne({ id: update.id }, { $set: { ...update } }, { upsert: true });
+      }
+    });
+
+    ev.on('chats.delete', async (deletions) => {
+      for (const deletion of deletions) {
+        await chatsCol.deleteOne({ id: jidNormalizedUser(deletion) });
       }
     });
   };
