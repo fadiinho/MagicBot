@@ -4,7 +4,8 @@ import {
   GroupMetadata,
   proto,
   AnyMessageContent,
-  MiscMessageGenerationOptions
+  MiscMessageGenerationOptions,
+  MinimalMessage
 } from '@adiwajshing/baileys';
 
 export interface ParsedData {
@@ -27,7 +28,7 @@ export interface ParsedData {
   isViewOnce: boolean;
   getMedia(): Promise<Buffer | null>;
   getGroupMetadata(): Promise<GroupMetadata | null>;
-  getQuotedMessage(): Promise<ParsedData | null>;
+  getQuotedMessage(minimal?: boolean): Promise<ParsedData | MinimalMessage | null>;
   reply(content: AnyMessageContent, options?: MiscMessageGenerationOptions): Promise<proto.WebMessageInfo>;
   getUserPic(highres: boolean): Promise<Buffer | null>;
   getGroupPic(highres: boolean): Promise<Buffer | null>;
