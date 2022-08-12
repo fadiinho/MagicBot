@@ -122,6 +122,14 @@ export default async (mongoUri: string) => {
       })
 
       return docs;
+    },
+    loadLastMessage: async (jid: string) => {
+      const userDoc = await messagesCol.findOne({ id: jidNormalizedUser(jid) });
+      if (!userDoc) throw new Error('Jid not found');
+      const messages: WAMessage[] = userDoc.messages;
+
+      return messages.pop();
+
     }
   }
 }
