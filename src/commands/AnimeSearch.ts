@@ -1,7 +1,6 @@
 import Client from '../Client';
 import { Command, ParsedData } from '../structures';
 import AnimeApi from 'anime-image-search';
-import { downloadContentFromMessage } from '@adiwajshing/baileys';
 
 export default class AnimeSearch implements Command {
   info = {
@@ -23,7 +22,12 @@ export default class AnimeSearch implements Command {
       data.reply({ text: 'Você precisa marcar uma imagem.' });
       return;
     }
-    const quoted = await data.getQuotedMessage();
+    const quoted = await data.getQuotedMessage() as ParsedData;
+    if (!quoted) {
+      await client.reactToMsg(messageInfo.key, { emoji: '❌' });
+      data.reply({ text: 'Algo deu errado, tente re-enviar a imagem.' });
+      return;
+    }
     const type = quoted.messageType;
 
     if (!quoted.hasMedia || type !== 'imageMessage') {
@@ -34,18 +38,8 @@ export default class AnimeSearch implements Command {
 
     await client.reactToMsg(messageInfo.key, { emoji: '⌛' });
     data.reply({ text: 'Um momento, estou procurando a imagem.' });
-    // @ts-ignore
-    const stream: ReturnType<typeof downloadContentFromMessage> = await downloadContentFromMessage(
-      // @ts-ignore
-      quoted.getMedia(),
-      'image'
-    );
 
-    let buffer = Buffer.from([]);
-
-    for await (const chunk of await stream) {
-      buffer = Buffer.concat([buffer, chunk]);
-    }
+    const buffer = await quoted.getMedia();
 
     const result = await api.saucenao(buffer, {
       hide: 1,
@@ -59,7 +53,6 @@ export default class AnimeSearch implements Command {
 
     await client.reactToMsg(messageInfo.key, { remove: true });
     await client.reactToMsg(messageInfo.key, { emoji: '✅' });
-    // @ts-ignore
     const { data: imgData } = result[0];
 
     data.reply({ text: `Encontrei a imagem.\nFonte: ${imgData.ext_urls[0]}` });

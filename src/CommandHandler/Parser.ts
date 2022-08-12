@@ -3,7 +3,7 @@ dotenv.config();
 
 import axios from 'axios';
 
-import { WAMessage, getContentType, isJidGroup, downloadContentFromMessage } from '@adiwajshing/baileys';
+import { WAMessage, getContentType, isJidGroup, downloadContentFromMessage, WAMessageKey, MinimalMessage } from '@adiwajshing/baileys';
 import { isMedia, logger } from '../utils';
 import type Client from '../Client';
 import { ParsedData } from '../structures';
@@ -52,10 +52,14 @@ export default async function parse(data: WAMessage, client: Client) {
     isViewOnce: type === 'viewOnceMessage',
     getMedia: async function () {
       if (!this.hasMedia) return null;
+
+      const _m = this.message[this.messageType];
+
       const stream = await downloadContentFromMessage(
-        this.message[this.messageType],
+        { mediaKey: _m.mediaKey.buffer, directPath: _m.directPath, url: _m.url },
         this.messageType === 'imageMessage' ? 'image' : 'video'
       );
+
       let buffer = Buffer.from([]);
 
       for await (const chunk of stream) {
@@ -69,7 +73,7 @@ export default async function parse(data: WAMessage, client: Client) {
 
       return await client.socket.groupMetadata(this.from);
     },
-    getQuotedMessage: async function (): Promise<ParsedData | null> {
+    getQuotedMessage: async function (minimal?): Promise<ParsedData | MinimalMessage | null> {
       const quotedId = this.hasMedia
         ? this.message[this.messageType].contextInfo?.stanzaId
         : this.message?.extendedTextMessage?.contextInfo?.stanzaId;
@@ -80,6 +84,11 @@ export default async function parse(data: WAMessage, client: Client) {
       const _q = await client.store.loadMessage(this.from, quotedId, client.socket).catch((err) => {
         throw new Error(err.message);
       });
+
+      if (minimal) {
+        return { key: _q.key, messageTimestamp: _q.messageTimestamp };
+      }
+
       const quotedMessage = _q ? await parse(_q, client) : null;
 
       return quotedMessage;

@@ -15,7 +15,7 @@ export default class GetViewOnce implements Command {
     const { hasQuotedMessage } = data;
 
     if (!hasQuotedMessage) return;
-    const quotedMessage = await data.getQuotedMessage();
+    const quotedMessage = await data.getQuotedMessage() as ParsedData;
 
     if (!quotedMessage.isViewOnce) return;
 
