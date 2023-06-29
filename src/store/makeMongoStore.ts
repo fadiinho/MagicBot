@@ -5,10 +5,11 @@ import { connect } from '../services/db';
 
 
 export default async (mongoUri: string) => {
-  if (!mongoUri) throw new Error('MongoDB URI is required.');
   const _logger = logger.child({ stream: 'mongodb-store' });
+  _logger.debug({ mongoUri })
+  if (!mongoUri) throw new Error('MongoDB URI is required.');
 
-  const client = await connect(mongoUri); 
+  const client = await connect(mongoUri);
 
   const db = client.db('store');
 
@@ -22,7 +23,7 @@ export default async (mongoUri: string) => {
 
     if (!user) {
       await messagesCol.insertOne({ id, messages: [] });
-      
+
       return await messagesCol.findOne({ id });
 
     }
@@ -47,7 +48,7 @@ export default async (mongoUri: string) => {
         _logger.debug(returnStatus, 'Upserted message to store');
       }
     });
-    
+
     ev.on('messages.delete', async (item) => {
       if ('all' in item) {
         return await messagesCol.updateOne({ id: item.jid }, { $set: { messages: [] } });
@@ -107,7 +108,7 @@ export default async (mongoUri: string) => {
       return msg;
     },
     deleteAllMessagesFromContact: async (jid: string) => {
-      const result = await messagesCol.deleteOne({ id: jidNormalizedUser(jid) }); 
+      const result = await messagesCol.deleteOne({ id: jidNormalizedUser(jid) });
 
       _logger.debug({ jid, result }, 'Deleted all messages from user');
 

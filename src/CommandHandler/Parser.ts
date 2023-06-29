@@ -3,7 +3,7 @@ dotenv.config();
 
 import axios from 'axios';
 
-import { WAMessage, getContentType, isJidGroup, downloadContentFromMessage, WAMessageKey, MinimalMessage } from '@adiwajshing/baileys';
+import { WAMessage, getContentType, isJidGroup, downloadContentFromMessage, MinimalMessage } from '@adiwajshing/baileys';
 import { isMedia, logger } from '../utils';
 import type Client from '../Client';
 import { ParsedData } from '../structures';

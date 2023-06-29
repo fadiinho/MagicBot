@@ -14,13 +14,16 @@ import type Handler from './CommandHandler';
 import { isEmoji, logger } from './utils';
 
 import { makeMongoStore } from './store';
+import { bindQr } from './services/server';
+
+export type BaileysSocket = ReturnType<typeof makeWASocket>;
 
 export default class Client {
   SESSION_PATH: string;
   STORE_PATH: string;
   stateObject: Awaited<ReturnType<typeof useMultiFileAuthState>>;
   store: Awaited<ReturnType<typeof makeMongoStore>>;
-  socket: ReturnType<typeof makeWASocket> | null;
+  socket: BaileysSocket | null;
   events: { event: string; on: () => void }[];
   handler: Handler | undefined;
 
@@ -37,6 +40,7 @@ export default class Client {
 
   async init() {
     this.stateObject = await useMultiFileAuthState(this.SESSION_PATH);
+    logger.debug("MONGO_URI", { mongoUri: process.env.MONGODB_URI })
     this.store = await makeMongoStore(process.env.MONGODB_URI);
 
     this.socket = makeWASocket({
@@ -73,6 +77,7 @@ export default class Client {
       event.on();
       logger.debug({ event: event.event }, 'listening for Event');
     });
+    bindQr(this.socket.ev);
   }
 
   onMessage(callback: (message: WAMessage) => void) {
