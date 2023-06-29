@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "NODE_ENV=development yarn ts-node-dev --respawn --transpile-only --rs ./src/index.ts",
     "build": "rm -rf ./lib/ && yarn tsc --build",
-    "start": "NODE_ENV=production node lib/index.js"
+    "start": "NODE_ENV=production node lib/index.js",
+    "start:dev": "NODE_ENV=development ts-node src/index.ts"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "https://github.com/adiwajshing/Baileys.git",
+    "@adiwajshing/baileys": "https://github.com/WhiskeySockets/Baileys.git",
     "@adiwajshing/keyed-db": "^0.2.4",
+    "@hapi/boom": "^10.0.1",
     "anime-image-search": "https://github.com/EmersonDoAmaral/anime-image-search.git",
     "axios": "^0.27.2",
     "dotenv": "^16.0.0",
@@ -22,16 +24,18 @@
     "mongodb": "^4.8.0",
     "pino": "^7.10.0",
     "pino-pretty": "^7.6.1",
+    "qrcode": "^1.5.3",
     "qrcode-terminal": "^0.12.0",
     "socket.io": "^4.5.1",
-    "tiktok-scraper": "^1.4.36",
-    "twitch-service": "https://github.com/fadiinho/twitch-service"
+    "tiktok-scraper": "^1.4.36"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.23",
+    "ts-node": "^10.9.1",
     "ts-node-dev": "^1.1.8",
     "tsc": "^2.0.4",
     "typescript": "^4.6.3"
-  }
+  },
+  "packageManager": "yarn@3.6.0"
 }

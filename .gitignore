@@ -4,3 +4,11 @@ node_modules
 .env
 Test.ts
 src/config/twitch.json
+
+.yarn/*
+.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
