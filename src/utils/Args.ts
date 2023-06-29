@@ -19,7 +19,7 @@ export interface ParsedArgs {
 export const parse = (text: string, args: Arg[], subCommand = false): ParsedArgs => {
   const splitedText = text.split(' ');
 
-  let newSplited = subCommand ? splitedText : splitedText.slice(1); 
+  let newSplited = subCommand ? splitedText : splitedText.slice(1);
 
   const matchedCommand = args.find((_command) => _command.name === newSplited[0]) || args.find((_command) => _command.default);
 
@@ -29,7 +29,7 @@ export const parse = (text: string, args: Arg[], subCommand = false): ParsedArgs
 
   newSplited = matchedCommand.default && newSplited[0] !== matchedCommand.name ? newSplited : newSplited.slice(1);
 
-  const matchedArg = newSplited[0];
+  let matchedArg = newSplited[0];
 
   if (!matchedArg && matchedCommand.argsRequired) {
     return { error: true, errorMessage: 'args-required' };
@@ -44,6 +44,10 @@ export const parse = (text: string, args: Arg[], subCommand = false): ParsedArgs
   newSplited = matchedCommand.argsRequired ? newSplited.slice(1) : newSplited;
 
   const matchedSubCommand =  matchedCommand.subCommands && newSplited.length ? parse(newSplited.join(' '), matchedCommand.subCommands, true) : undefined;
+
+  if (newSplited?.length && !matchedSubCommand) {
+    matchedArg += ` ${newSplited.join(' ')}`
+  }
 
   return { name: matchedCommand.name, matchedCommand, matchedArg, matchedSubCommand }
 }
